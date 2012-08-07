@@ -15,39 +15,34 @@ This lib will use these customised versions of these brilliant and time tested r
 
 Dev schedule:
 
-v0.1
-Allow setup of oauth & basic authentication methods.
-Allow setup of Github repo paths and corresponding server paths.
-Get Github file list for selected repo/server path combo.
-
-v0.2
+**v0.2**
 Get server file list for selected repo/server path combo.
 
-v0.3
+**v0.3**
 Compare lists of files to determin new, deleted & changed files and display.
 
-v0.4
+**v0.4**
 Allow users to view differences between files that have changed.
 
-v0.5
+**v0.5**
 Allow users to put a check against changed files, type message and commit.
 
-v0.6
+**v0.6**
 Allow users to put a check against new or deleted files, type message and commit.
 
-v0.7
+**v0.7**
 Setup & oath instructions screen added.
 
-v0.8
+**v0.8**
 Bug testing, refactoring & optimisation.
 
-v0.9
+**v0.9**
 Alpha testing
 
-v0.95
+**v0.95**
 Beta testing
 
-v1.0
+**v1.0**
 Version 1 released
 
 Estimated completion date:
