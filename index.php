@@ -5,7 +5,7 @@ if ($_SESSION['userLevel'] == 0) {
 }
 
 $docRoot = $_SERVER['DOCUMENT_ROOT'];
-$version = "0.1";
+$version = "0.2";
 
 // AUTHENTICATION
 // Can either be done by oauth, or username & password.
@@ -22,7 +22,7 @@ $password = "password";
 // (the last param is to identify which dropdown option to select by default).
 $repos = array(
 		"mattpass/dirTree",$docRoot."/dirTree","",
-		"mattpass/ICEcoder",$docRoot."/ICEcoder","selected"
+		"mattpass/CodeMirror2",$docRoot."/CodeMirror2","selected"
 		);
 ?>
 <!DOCTYPE html>
@@ -33,50 +33,35 @@ $repos = array(
 <script src="lib/github.js"></script>
 </head>
 
-<body onLoad="gitCommand('repo.show',document.getElementById('repos').value)">
+<body style="margin: 0; overflow: hidden" onLoad="doRepo(document.getElementById('repos').value)">
 
-<select name="repos" id="repos" onChange="gitCommand('repo.show',this.value)">
-<?php
-for ($i=0;$i<count($repos);$i+=3) {
- 	echo '<option id="repo'.($i/3).'" value="'.$repos[$i].'@'.$repos[$i+1].'"';
-	echo $repos[$i+2]=="selected" ? ' selected' : '';
-	echo '>'.$repos[$i]."</option>\n";
-}
-?>
-</select>
-
-<script>
-var github = new Github(<?php
-	if ($token!="") {
-		echo '{token: "'.$token.'", auth: "oauth"}';
-	} else{
-		echo '{username: "'.$username.'", password: "'.$password.'", auth: "basic"}';
-	}?>);
-	
-gitCommand = function(comm,value) {
-	if (comm=="repo.show") {
-		repoDir = value.split("@");
-		user = repoDir[0].split("/")[0];
-		repo = repoDir[0].split("/")[1];
-		dir = repoDir[1];		
-		console.log("user:" + user + " repo: " + repo + " server dir: " + dir);
-		var repo = github.getRepo(user,repo);
-		var user = github.getUser();
-		document.getElementById('repo').innerHTML = "";
- 		repo.getTree('master?recursive=true', function(err, tree) {
-			for (i=0;i<tree.length;i++) {
-				document.getElementById('repo').innerHTML += i + " : " + tree[i].path + "<br>";
-			}
-			console.log(tree)}
-		)
+<div style="position: absolute; width: 100%; height: 60px; background: #444; z-index: 1">
+	<select name="repos" id="repos" onChange="doRepo(this.value)" style="margin: 20px 0 0 20px">
+	<?php
+	for ($i=0;$i<count($repos);$i+=3) {
+		echo '<option id="repo'.($i/3).'" value="'.$repos[$i].'@'.$repos[$i+1].'"';
+		echo $repos[$i+2]=="selected" ? ' selected' : '';
+		echo '>'.$repos[$i]."</option>\n";
 	}
-}	
+	?>
+	</select>
+</div>
 	
+<script>
+doRepo = function(repo) {
+	document.showRepo.repo.value = repo;
+	document.showRepo.submit();
+}
 </script>
 
-<div id="repo" style="margin-top: 20px">
-	
-</div>
+<form name="showRepo" action="contents.php" target="repo" method="POST">
+<input type="hidden" name="token" value="<?php echo $token;?>">
+<input type="hidden" name="username" value="<?php echo $username;?>">
+<input type="hidden" name="password" value="<?php echo $password;?>">
+<input type="hidden" name="repo" value="">
+</form>
+
+<iframe id="repo" style="position: absolute; width: 100%; height: 90%; left: 0px; margin-top: 60px"></iframe>
 	
 </body>
 
