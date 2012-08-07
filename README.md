@@ -15,9 +15,6 @@ This lib will use these customised versions of these brilliant and time tested r
 
 Dev schedule:
 
-**v0.2**
-Get server file list for selected repo/server path combo.
-
 **v0.3**
 Compare lists of files to determin new, deleted & changed files and display.
 
