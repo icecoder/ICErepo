@@ -5,7 +5,7 @@ if ($_SESSION['userLevel'] == 0) {
 }
 
 $docRoot = $_SERVER['DOCUMENT_ROOT'];
-$version = "0.3";
+$version = "0.31";
 
 // AUTHENTICATION
 // Can either be done by oauth, or username & password.
@@ -61,7 +61,7 @@ doRepo = function(repo) {
 <input type="hidden" name="repo" value="">
 </form>
 
-<iframe id="repo" style="position: absolute; width: 100%; height: 90%; left: 0px; margin-top: 60px"></iframe>
+<iframe id="repo" style="position: absolute; width: 100%; height: 90%; left: 0px; margin-top: 60px" frameborder="0"></iframe>
 	
 </body>
 
