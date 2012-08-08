@@ -11,7 +11,7 @@ The aim is a simple UI to allow users to view differences between your server di
 
 Users can then to pick & choose the files they'd like to commit, provide a commit message and push to Github. Those that are only on the server are pushed to Github. Those no longer on the server are removed from Github. Those that have changed are patched over the top of the existing Github held file. As each file is synced by the user to match the server it dissapears from the UI list.
 
-** Current screnshot (v0.3):**
+**Current screnshot (v0.3):**
 
 <img src="http://www.icecoder.net/github/v03.jpg" alt="v0.3 screenshot">
 
