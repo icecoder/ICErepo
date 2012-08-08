@@ -20,11 +20,11 @@ function numClean($var) {
 <title>ICErepo v<?php echo $version;?></title>
 <script src="lib/base64.js"></script>
 <script src="lib/github.js"></script>
+<link rel="stylesheet" type="text/css" href="ice-repo.css">
 </head>
 
-<body style="margin: 20px; font-family: arial, helvetica, swiss, verdana; font-size: 12px">
+<body>
 	
-<div id="dirList" style="position: relative; float: left; padding-right: 100px"><b style="font-size: 18px">SERVER DIR LIST:</b><br><br>
 <?php
 // Function to sort given values alphabetically
 function alphasort($a, $b) {
@@ -59,7 +59,6 @@ foreach ($objectList as $objectRef) {
 	if ($objectRef->getFilename()!="." && $fileFolderName[strlen($fileFolderName)-1]!="/") {
 			$contents = file_get_contents($path.$fileFolderName);
 			$store = "blob ".strlen($contents)."\0".$contents;
-			echo $i." : ".ltrim($fileFolderName,"/")."<br>".sha1($store)."<br><br>";
 			$i++;
 			array_push($dirListArray,ltrim($fileFolderName,"/"));
 			array_push($dirSHAArray,sha1($store));
@@ -89,11 +88,8 @@ for ($i=0;$i<count($dirTypeArray);$i++) {
 echo '];'.PHP_EOL;
 echo '</script>';
 ?>
-</div>
-
-<div id="repoList" style="position: relative: left: 0px; float: left; padding-right: 100px"></div>
 	
-<div id="compareList" style="position: relative; float: left"></div>
+<div id="compareList" class="mainContainer"></div>
 	
 <script>
 var github = new Github(<?php
@@ -113,26 +109,26 @@ gitCommand = function(comm,value) {
 		dir = repoDir[1];		
 		var repo = github.getRepo(user,repo);
 		var user = github.getUser();
-		var repoList = "<b style='font-size: 18px'>REPO LIST (Github):</b><br><br>";
-		var compareList = "COMPARE LIST:<br><br>";
-		document.getElementById('repoList').innerHTML = "";
-		document.getElementById('compareList').innerHTML = "";
+		var compareList = "";
  		repo.getTree('master?recursive=true', function(err, tree) {
 			for (i=0;i<tree.length;i++) {
-				repoList += i + " : " + tree[i].path + "<br>" + tree[i].sha + "<br><br>";
 				repoListArray.push(tree[i].path);
 				repoSHAArray.push(tree[i].sha);
 			}
-			document.getElementById('repoList').innerHTML = repoList;
 			console.log(tree);
-			compareList += "<b style='font-size: 18px'>CHANGED FILES:</b><br><br>"
+			compareList += "<b style='font-size: 18px'>CHANGED FILES:</b><br><br>";
 			newFilesList = "";
 			for (i=0;i<dirListArray.length;i++) {
 				repoArrayPos = repoListArray.indexOf(dirListArray[i]);
+				if (dirTypeArray[i]=="dir") {
+					fileExt = "folder";
+				} else {
+					fileExt = dirListArray[i].substr(dirListArray[i].lastIndexOf('.')+1);
+				}
 				if (repoArrayPos == "-1") {
-					newFilesList += i+" : "+dirListArray[i]+"<br>";
+					newFilesList += "<div class='row'><div class='icon ext-"+fileExt+"'></div>"+dirListArray[i]+"</div><br>";
 				} else if (dirTypeArray[i] == "file" && dirSHAArray[i] != repoSHAArray[repoArrayPos]) {
-					compareList += i+" = "+repoArrayPos+" : "+dirListArray[i]+"<br>";
+					compareList += "<div class='row'><div class='icon ext-"+fileExt+"'></div>"+dirListArray[i]+"</div><br>";
 				}
 			}
 			
@@ -141,8 +137,13 @@ gitCommand = function(comm,value) {
 			delFilesList = "";
 			for (i=0;i<repoListArray.length;i++) {
 				dirArrayPos = dirListArray.indexOf(repoListArray[i]);
+				if (repoListArray[i].lastIndexOf('/') > repoListArray[i].lastIndexOf('.')) {
+					fileExt = "folder";
+				} else {
+					fileExt = repoListArray[i].substr(repoListArray[i].lastIndexOf('.')+1);
+				}
 				if (dirArrayPos == "-1") {
-					delFilesList += i+" : "+repoListArray[i]+"<br>";
+					delFilesList += "<div class='row'><div class='icon ext-"+fileExt+"'></div>"+repoListArray[i]+"</div><br>";
 				}
 			}
 			
