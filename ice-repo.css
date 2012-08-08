@@ -1,0 +1,48 @@
+/* First, reset everything to a standard */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+	font-family: arial, verdana, helvetica, sans-serif;
+	border: 0px;
+	margin: 0px;
+	padding: 0px;
+	outline: 0px;
+	font-size: 12px;
+	vertical-align: top;
+}
+
+html, body {background-color: #fff; width: 100%}
+p {color: #444}
+
+.mainContainer {position: relative; display: block; width: 1000px; padding: 20px}
+
+.row {position: relative; display: inline-block; background: #eee; width: 100%; padding: 7px; margin-bottom: 2px; cursor: pointer}
+.row .icon {display: inline-block; width: 16px; height: 16px; margin-right: 7px; background-image:url(images/file-folder-icons.png); background-repeat: no-repeat}
+
+/* Folder */
+.ext-folder {background-position: -16px 0}
+
+/* Additional file types */
+.ext-coffee {background-position: -32px 0}
+.ext-css {background-position: -48px 0}
+.ext-gif {background-position: -64px 0}
+.ext-htm {background-position: -80px 0}
+.ext-html {background-position: -80px 0}
+.ext-jpg {background-position: -96px 0}
+.ext-jpeg {background-position: -96px 0}
+.ext-js {background-position: -112px 0}
+.ext-less {background-position: -1428px 0}
+.ext-php {background-position: -144px 0}
+.ext-png {background-position: -160px 0}
+.ext-rb {background-position: -176px 0}
+.ext-rbx {background-position: -176px 0}
+.ext-rhtml {background-position: -176px 0}
+.ext-ruby {background-position: -176px 0}
+.ext-txt {background-position: -192px 0}
+.ext-zip {background-position: -208px 0}
