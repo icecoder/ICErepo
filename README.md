@@ -13,7 +13,7 @@ Users can then to pick & choose the files they'd like to commit, provide a commi
 
 **Current screnshot (v0.3):**
 
-<img src="http://www.icecoder.net/github/v03.jpg" alt="v0.3 screenshot">
+<img src="http://www.icecoder.net/github/screenshot.jpg" alt="ICErepo screenshot">
 
 This lib will use these customised versions of these brilliant and time tested repos: Github API lib at https://github.com/michael/github and JS Diff lib at https://github.com/cemerick/jsdifflib
 
