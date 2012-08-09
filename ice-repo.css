@@ -22,8 +22,9 @@ p {color: #444}
 
 .mainContainer {position: relative; display: block; width: 1000px; padding: 20px}
 
-.row {position: relative; display: inline-block; background: #eee; width: 100%; padding: 7px; margin-bottom: 2px; cursor: pointer}
+.row {position: relative; display: inline-block; background: #ddd; width: 100%; padding: 7px; margin-bottom: 2px; cursor: pointer}
 .row .icon {display: inline-block; width: 16px; height: 16px; margin-right: 7px; background-image:url(images/file-folder-icons.png); background-repeat: no-repeat}
+.rowContent {position: relative; display: none; background: #eee; width: 100%; padding: 7px; margin-bottom: 10px}
 
 /* Folder */
 .ext-folder {background-position: -16px 0}
