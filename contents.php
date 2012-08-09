@@ -45,8 +45,9 @@ class SortingIterator implements IteratorAggregate {
 }
 
 // Get a full list of dirs & files and begin sorting using above class & function
-$repo = explode("@",strClean($_POST['repo']));
-$path = $repo[1];
+$repoPath = explode("@",strClean($_POST['repo']));
+$repo = $repoPath[0];
+$path = $repoPath[1];
 $objectList = new SortingIterator(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path), RecursiveIteratorIterator::SELF_FIRST), 'alphasort');
 
 // Finally, we have our ordered list, so display
@@ -110,6 +111,7 @@ gitCommand = function(comm,value) {
 		var repo = github.getRepo(user,repo);
 		var user = github.getUser();
 		var compareList = "";
+		rowID = 0;
  		repo.getTree('master?recursive=true', function(err, tree) {
 			for (i=0;i<tree.length;i++) {
 				repoListArray.push(tree[i].path);
@@ -128,7 +130,9 @@ gitCommand = function(comm,value) {
 				if (repoArrayPos == "-1") {
 					newFilesList += "<div class='row'><div class='icon ext-"+fileExt+"'></div>"+dirListArray[i]+"</div><br>";
 				} else if (dirTypeArray[i] == "file" && dirSHAArray[i] != repoSHAArray[repoArrayPos]) {
-					compareList += "<div class='row'><div class='icon ext-"+fileExt+"'></div>"+dirListArray[i]+"</div><br>";
+					rowID++;
+					compareList += "<div class='row' onClick='getContent("+rowID+",\""+dirListArray[i]+"\")'><div class='icon ext-"+fileExt+"'></div>"+rowID+":"+dirListArray[i]+"</div><br>";
+					compareList += "<span class='rowContent' id='row"+rowID+"Content'></span>";
 				}
 			}
 			
@@ -148,14 +152,44 @@ gitCommand = function(comm,value) {
 			}
 			
 			compareList += "<br><b style='font-size: 18px'>DELETED FILES:</b><br><br>"+delFilesList;
-			
 			document.getElementById('compareList').innerHTML = compareList;
 			}
 		)
 	}
 }
+	
+getContent = function(thisRow,path) {
+	if ("undefined" == typeof lastRow || lastRow!=thisRow || document.getElementById('row'+thisRow+'Content').innerHTML=="") {
+		for (i=1;i<=rowID;i++) {
+			document.getElementById('row'+i+'Content').innerHTML = "";
+			document.getElementById('row'+i+'Content').style.display = "none";
+		}
+		repo = "<?php echo $repo;?>" + "/" + path;
+		dir = "<?php echo $path;?>" + "/" + path;
+		document.fcForm.rowID.value = thisRow;
+		document.fcForm.repo.value = repo;
+		document.fcForm.dir.value = dir;
+		document.fcForm.submit();
+	} else {
+		document.getElementById('row'+thisRow+'Content').innerHTML = "";
+		document.getElementById('row'+thisRow+'Content').style.display = "none";
+	}
+	lastRow = thisRow;
+}
+
 gitCommand('repo.show','<?php echo strClean($_POST['repo']);?>');
 </script>
+	
+<form name="fcForm" action="file-control.php" target="fileControl" method="POST">
+<input type="hidden" name="token" value="<?php echo strClean($_POST['token']);?>">
+<input type="hidden" name="username" value="<?php echo strClean($_POST['username']);?>">
+<input type="hidden" name="password" value="<?php echo strClean($_POST['password']);?>">
+<input type="hidden" name="rowID" value="">
+<input type="hidden" name="repo" value="">
+<input type="hidden" name="dir" value="">
+</form>
+	
+<iframe name="fileControl" style="display: none"></iframe>
 	
 </body>
 	
