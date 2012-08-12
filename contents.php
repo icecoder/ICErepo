@@ -21,8 +21,8 @@ function numClean($var) {
 <script src="lib/base64.js"></script>
 <script src="lib/github.js"></script>
 <link rel="stylesheet" type="text/css" href="ice-repo.css">
-<script type="text/javascript" src="lib/diffview.js"></script>
 <script type="text/javascript" src="lib/difflib.js"></script>
+<script type="text/javascript" src="lib/diffview.js"></script>
 <link rel="stylesheet" type="text/css" href="lib/diffview.css"/>
 </head>
 
