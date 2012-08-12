@@ -19,9 +19,6 @@ This lib will use these customised versions of these brilliant and time tested r
 
 Dev schedule:
 
-**v0.4**
-Allow users to view differences between files that have changed.
-
 **v0.5**
 Allow users to put a check against changed files, type message and commit.
 
