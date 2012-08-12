@@ -27,6 +27,8 @@ echo "<script>fullRepoPath='".$repo."';</script>";
 <script src="lib/underscore-min.js"></script>
 <script src="lib/base64.js"></script>
 <script src="lib/github.js"></script>
+<script type="text/javascript" src="lib/difflib.js"></script>
+<script type="text/javascript" src="lib/diffview.js"></script>
 <link rel="stylesheet" type="text/css" href="ice-repo.css">
 </head>
 
@@ -56,11 +58,35 @@ var repo = github.getRepo(repoUser,repoName);
 sendData = function() {
 	repo.read('master', filePath, function(err, data) {
 		document.fcForm.repoContents.innerHTML=data;
-		dirContent = "<pre style='white-space:pre-wrap'>"+document.fcForm.fileContents.innerHTML+"</pre>";
-		repoContent = "<pre style='white-space:pre-wrap'>"+document.fcForm.repoContents.innerHTML+"</pre>";
-		parent.document.getElementById("row"+rowID+"Content").innerHTML = "<b>DIR CONTENT:</b><br><br>" + dirContent + "<br><br><hr><br><b>REPO CONTENT:</b><br><br>" + repoContent;
+		dirContent = document.fcForm.fileContents.value;
+		repoContent = document.fcForm.repoContents.value;
+		diffUsingJS(dirContent,repoContent);
 		parent.document.getElementById("row"+rowID+"Content").style.display = "inline-block";
 	});
+}
+	
+function diffUsingJS (dirContent,repoContent) {
+	var base = difflib.stringAsLines(dirContent);
+	var newtxt = difflib.stringAsLines(repoContent);
+	var sm = new difflib.SequenceMatcher(base, newtxt);
+	var opcodes = sm.get_opcodes();
+	var diffoutputdiv = parent.document.getElementById("row"+rowID+"Content");
+	while (diffoutputdiv.firstChild) diffoutputdiv.removeChild(diffoutputdiv.firstChild);
+	var contextSize = ""; // optional
+	contextSize = contextSize ? contextSize : null;
+	diffoutputdiv.appendChild(
+		diffview.buildView(
+			{
+			baseTextLines:base,
+			newTextLines:newtxt,
+			opcodes:opcodes,
+			baseTextName:"Server: <?php echo str_replace($_SERVER['DOCUMENT_ROOT']."/","",$dir);?>",
+			newTextName:"Github: <?php echo $repo;?>",
+			contextSize:contextSize,
+			viewType: 0 // 0 or 1
+			}
+		)
+	)
 }
 </script>
 	
