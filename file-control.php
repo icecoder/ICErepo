@@ -32,7 +32,7 @@ echo "<script>fullRepoPath='".$repo."';</script>";
 <link rel="stylesheet" type="text/css" href="ice-repo.css">
 </head>
 
-<body onLoad="sendData()">
+<body>
 	
 <?php
 $fileContents = file_get_contents($dir);
@@ -42,7 +42,8 @@ $fileContents = file_get_contents($dir);
 <textarea name="fileContents"><?php echo htmlentities($fileContents); ?></textarea>
 <textarea name="repoContents"></textarea>
 </form>
-	
+
+<?php if ($_POST['action']=="view") {?>
 <script>
 var github = new Github(<?php
 if ($token!="") {
@@ -80,14 +81,17 @@ function diffUsingJS (dirContent,repoContent) {
 			baseTextLines:base,
 			newTextLines:newtxt,
 			opcodes:opcodes,
-			baseTextName:"Server: <?php echo str_replace($_SERVER['DOCUMENT_ROOT']."/","",$dir);?>",
-			newTextName:"Github: <?php echo $repo;?>",
+			baseTextName:"Server:     <?php echo str_replace($_SERVER['DOCUMENT_ROOT']."/","",$dir);?>     ",
+			newTextName:"Github:     <?php echo $repo;?>",
 			contextSize:contextSize,
-			viewType: 0 // 0 or 1
+			viewType: 1 // 0 = side by side, 1 = inline
 			}
 		)
 	)
 }
+	
+sendData();
+<?php ;}; ?>
 </script>
 	
 </body>
