@@ -20,8 +20,8 @@ function numClean($var) {
 <title>ICErepo v<?php echo $version;?></title>
 <script src="lib/base64.js"></script>
 <script src="lib/github.js"></script>
-<link rel="stylesheet" type="text/css" href="ice-repo.css">
 <script type="text/javascript" src="lib/difflib.js"></script>
+<link rel="stylesheet" type="text/css" href="ice-repo.css">
 <script type="text/javascript" src="lib/diffview.js"></script>
 <link rel="stylesheet" type="text/css" href="lib/diffview.css"/>
 </head>
@@ -95,6 +95,15 @@ echo '</script>';
 	
 <div id="compareList" class="mainContainer"></div>
 	
+<div id="commitPane" class="commitPane">
+<b style='font-size: 18px'>COMMIT CHANGES:</b><br><br>
+<form>
+<input type="text" name="title" value="title" style="width: 260px; border: 0; background: #f8f8f8; margin-bottom: 10px"><br>
+<textarea name="message" style="width: 260px; height: 180px; border: 0; background: #f8f8f8; margin-bottom: 5px">message</textarea>
+<input type="submit" name="commit" value="Commit changes" style="border: 0; background: #555; color: #fff">
+</form>
+</div>
+	
 <script>
 var github = new Github(<?php
 if ($token!="") {
@@ -131,10 +140,12 @@ gitCommand = function(comm,value) {
 					fileExt = dirListArray[i].substr(dirListArray[i].lastIndexOf('.')+1);
 				}
 				if (repoArrayPos == "-1") {
-					newFilesList += "<div class='row'><div class='icon ext-"+fileExt+"'></div>"+dirListArray[i]+"</div><br>";
+					rowID++;
+					newFilesList += "<div class='row' onClick='getContent("+rowID+",\""+dirListArray[i]+"\")'><input type='checkbox' style='border: 0; background: #888' onMouseOver='overOption=true' onMouseOut='overOption=false'> <div class='icon ext-"+fileExt+"'></div>"+dirListArray[i]+"</div><br>";
+					newFilesList += "<span class='rowContent' id='row"+rowID+"Content'></span>";
 				} else if (dirTypeArray[i] == "file" && dirSHAArray[i] != repoSHAArray[repoArrayPos]) {
 					rowID++;
-					compareList += "<div class='row' onClick='getContent("+rowID+",\""+dirListArray[i]+"\")'><div class='icon ext-"+fileExt+"'></div>"+dirListArray[i]+"</div><br>";
+					compareList += "<div class='row' onClick='getContent("+rowID+",\""+dirListArray[i]+"\")'><input type='checkbox' style='border: 0; background: #888' onMouseOver='overOption=true' onMouseOut='overOption=false'> <div class='icon ext-"+fileExt+"'></div>"+dirListArray[i]+"<div class='pullGithub' onMouseOver='overOption=true' onMouseOut='overOption=false'>Pull from Github</div></div><br>";
 					compareList += "<span class='rowContent' id='row"+rowID+"Content'></span>";
 				}
 			}
@@ -150,7 +161,9 @@ gitCommand = function(comm,value) {
 					fileExt = repoListArray[i].substr(repoListArray[i].lastIndexOf('.')+1);
 				}
 				if (dirArrayPos == "-1") {
-					delFilesList += "<div class='row'><div class='icon ext-"+fileExt+"'></div>"+repoListArray[i]+"</div><br>";
+					rowID++;
+					delFilesList += "<div class='row' onClick='getContent("+rowID+",\""+repoListArray[i]+"\")'><input type='checkbox' style='border: 0; background: #888' onMouseOver='overOption=true' onMouseOut='overOption=false'> <div class='icon ext-"+fileExt+"'></div>"+repoListArray[i]+"<div class='pullGithub' onMouseOver='overOption=true' onMouseOut='overOption=false'>Pull from Github</div></div><br>";
+					delFilesList += "<span class='rowContent' id='row"+rowID+"Content'></span>";
 				}
 			}
 			
@@ -162,22 +175,25 @@ gitCommand = function(comm,value) {
 }
 	
 getContent = function(thisRow,path) {
-	if ("undefined" == typeof lastRow || lastRow!=thisRow || document.getElementById('row'+thisRow+'Content').innerHTML=="") {
-		for (i=1;i<=rowID;i++) {
-			document.getElementById('row'+i+'Content').innerHTML = "";
-			document.getElementById('row'+i+'Content').style.display = "none";
+	if("undefined" == typeof overOption || !overOption) {
+		if ("undefined" == typeof lastRow || lastRow!=thisRow || document.getElementById('row'+thisRow+'Content').innerHTML=="") {
+			for (i=1;i<=rowID;i++) {
+				document.getElementById('row'+i+'Content').innerHTML = "";
+				document.getElementById('row'+i+'Content').style.display = "none";
+			}
+			repo = "<?php echo $repo;?>" + "/" + path;
+			dir = "<?php echo $path;?>" + "/" + path;
+			document.fcForm.rowID.value = thisRow;
+			document.fcForm.repo.value = repo;
+			document.fcForm.dir.value = dir;
+			document.fcForm.action.value = "view";
+			document.fcForm.submit();
+		} else {
+			document.getElementById('row'+thisRow+'Content').innerHTML = "";
+			document.getElementById('row'+thisRow+'Content').style.display = "none";
 		}
-		repo = "<?php echo $repo;?>" + "/" + path;
-		dir = "<?php echo $path;?>" + "/" + path;
-		document.fcForm.rowID.value = thisRow;
-		document.fcForm.repo.value = repo;
-		document.fcForm.dir.value = dir;
-		document.fcForm.submit();
-	} else {
-		document.getElementById('row'+thisRow+'Content').innerHTML = "";
-		document.getElementById('row'+thisRow+'Content').style.display = "none";
+		lastRow = thisRow;
 	}
-	lastRow = thisRow;
 }
 
 gitCommand('repo.show','<?php echo strClean($_POST['repo']);?>');
@@ -190,6 +206,7 @@ gitCommand('repo.show','<?php echo strClean($_POST['repo']);?>');
 <input type="hidden" name="rowID" value="">
 <input type="hidden" name="repo" value="">
 <input type="hidden" name="dir" value="">
+<input type="hidden" name="action" value="">
 </form>
 	
 <iframe name="fileControl" style="display: none"></iframe>
