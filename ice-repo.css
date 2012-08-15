@@ -52,3 +52,14 @@ textarea, input {font-family: arial, verdana, helvetica, sans-serif; padding: 4p
 .ext-ruby {background-position: -176px 0}
 .ext-txt {background-position: -192px 0}
 .ext-zip {background-position: -208px 0}
+
+table.diff {color: #888; border: 0; white-space: pre-wrap}
+table.diff tbody th {color:#888; font-size: 11px; font-weight: normal; padding: 2px; vertical-align:top}
+table.diff thead th.texttitle {background: #444; color: #fff; text-align:left; padding: 2px}
+table.diff tbody td {width: 100%; font-family: Courier, monospace; vertical-align: top}
+table.diff .empty {background: #ddd}
+table.diff .replace {background: #888; color: #fff}
+table.diff .delete {background: #0b0; color: #fff}
+table.diff .skip {background: #f80; color: #fff}
+table.diff .insert {background: #b00; color: #fff}
+table.diff th.author {display: none}
