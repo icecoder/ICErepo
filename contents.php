@@ -22,8 +22,6 @@ function numClean($var) {
 <script src="lib/github.js"></script>
 <script type="text/javascript" src="lib/difflib.js"></script>
 <link rel="stylesheet" type="text/css" href="ice-repo.css">
-<script type="text/javascript" src="lib/diffview.js"></script>
-<link rel="stylesheet" type="text/css" href="lib/diffview.css"/>
 </head>
 
 <body>
@@ -97,10 +95,17 @@ echo '</script>';
 	
 <div id="commitPane" class="commitPane">
 <b style='font-size: 18px'>COMMIT CHANGES:</b><br><br>
-<form>
-<input type="text" name="title" value="title" style="width: 260px; border: 0; background: #f8f8f8; margin-bottom: 10px"><br>
-<textarea name="message" style="width: 260px; height: 180px; border: 0; background: #f8f8f8; margin-bottom: 5px">message</textarea>
-<input type="submit" name="commit" value="Commit changes" style="border: 0; background: #555; color: #fff">
+<form name="fcForm" action="file-control.php" target="fileControl" method="POST">
+<input type="text" name="title" value="Title..." style="width: 260px; border: 0; background: #f8f8f8; margin-bottom: 10px" onFocus="titleDefault='Title...'; if(this.value==titleDefault) {this.value=''}" onBlur="if(this.value=='') {this.value=titleDefault}"><br>
+<textarea name="message" style="width: 260px; height: 180px; border: 0; background: #f8f8f8; margin-bottom: 5px" onFocus="messageDefault='Message...'; if(this.value==messageDefault) {this.value=''}" onBlur="if(this.value=='') {this.value=messageDefault}">Message...</textarea>
+<input type="hidden" name="token" value="<?php echo strClean($_POST['token']);?>">
+<input type="hidden" name="username" value="<?php echo strClean($_POST['username']);?>">
+<input type="hidden" name="password" value="<?php echo strClean($_POST['password']);?>">
+<input type="hidden" name="rowID" value="">
+<input type="hidden" name="repo" value="">
+<input type="hidden" name="dir" value="">
+<input type="hidden" name="action" value="">
+<input type="submit" name="commit" value="Commit changes" onClick="return commitChanges()" style="border: 0; background: #555; color: #fff; cursor: pointer">
 </form>
 </div>
 	
@@ -141,16 +146,20 @@ gitCommand = function(comm,value) {
 				}
 				if (repoArrayPos == "-1") {
 					rowID++;
-					newFilesList += "<div class='row' onClick='getContent("+rowID+",\""+dirListArray[i]+"\")'><input type='checkbox' style='border: 0; background: #888' onMouseOver='overOption=true' onMouseOut='overOption=false' onClick='updateSelection(this,"+rowID+",\"<?php echo $path;?>/"+dirListArray[i]+"\",\"new\")'> <div class='icon ext-"+fileExt+"'></div>"+dirListArray[i]+"</div><br>";
+					styleExtra = fileExt == 'folder' ? ' style="cursor: default"' : '';
+					clickExtra = fileExt != 'folder' ? ' onClick="getContent('+rowID+',\''+dirListArray[i]+'\')"' : '';
+					newFilesList += "<div class='row' id='row"+rowID+"'"+clickExtra+styleExtra+"><input type='checkbox' style='border: 0; background: #888"+styleExtra+"' onMouseOver='overOption=true' onMouseOut='overOption=false' onClick='updateSelection(this,"+rowID+",\"<?php echo $path;?>/"+dirListArray[i]+"\",\"new\")'> <div class='icon ext-"+fileExt+"'></div>"+dirListArray[i]+"<br></div>";
 					newFilesList += "<span class='rowContent' id='row"+rowID+"Content'></span>";
 				} else if (dirTypeArray[i] == "file" && dirSHAArray[i] != repoSHAArray[repoArrayPos]) {
 					rowID++;
-					compareList += "<div class='row' onClick='getContent("+rowID+",\""+dirListArray[i]+"\")'><input type='checkbox' style='border: 0; background: #888' onMouseOver='overOption=true' onMouseOut='overOption=false' onClick='updateSelection(this,"+rowID+",\"<?php echo $path;?>/"+dirListArray[i]+"@<?php echo $repo;?>/"+dirListArray[i]+"\",\"changed\")'> <div class='icon ext-"+fileExt+"'></div>"+dirListArray[i]+"<div class='pullGithub' onMouseOver='overOption=true' onMouseOut='overOption=false'>Pull from Github</div></div><br>";
+					styleExtra = fileExt == 'folder' ? ' style="cursor: default"' : '';
+					clickExtra = fileExt != 'folder' ? ' onClick="getContent('+rowID+',\''+dirListArray[i]+'\')"' : '';
+					compareList += "<div class='row' id='row"+rowID+"'"+clickExtra+styleExtra+"><input type='checkbox' style='border: 0; background: #888' onMouseOver='overOption=true' onMouseOut='overOption=false' onClick='updateSelection(this,"+rowID+",\"<?php echo $path;?>/"+dirListArray[i]+"@<?php echo $repo;?>/"+dirListArray[i]+"\",\"changed\")'> <div class='icon ext-"+fileExt+"'></div>"+dirListArray[i]+"<div class='pullGithub' onMouseOver='overOption=true' onMouseOut='overOption=false'>Pull from Github</div><br></div>";
 					compareList += "<span class='rowContent' id='row"+rowID+"Content'></span>";
 				}
 			}
 
-			compareList += "<br><b style='font-size: 18px'>NEW FILES:</b><br><br>"+newFilesList;
+			compareList += "<br><br><b style='font-size: 18px'>NEW FILES:</b><br><br>"+newFilesList;
 			
 			delFilesList = "";
 			for (i=0;i<repoListArray.length;i++) {
@@ -162,12 +171,14 @@ gitCommand = function(comm,value) {
 				}
 				if (dirArrayPos == "-1") {
 					rowID++;
-					delFilesList += "<div class='row' onClick='getContent("+rowID+",\""+repoListArray[i]+"\")'><input type='checkbox' style='border: 0; background: #888' onMouseOver='overOption=true' onMouseOut='overOption=false' onClick='updateSelection(this,"+rowID+",\"<?php echo $repo;?>/"+repoListArray[i]+"\",\"deleted\")'> <div class='icon ext-"+fileExt+"'></div>"+repoListArray[i]+"<div class='pullGithub' onMouseOver='overOption=true' onMouseOut='overOption=false'>Pull from Github</div></div><br>";
+					styleExtra = fileExt == 'folder' ? ' style="cursor: default"' : '';
+					clickExtra = fileExt != 'folder' ? ' onClick="getContent('+rowID+',\''+repoListArray[i]+'\')"' : '';
+					delFilesList += "<div class='row' id='row"+rowID+"'"+clickExtra+styleExtra+"><input type='checkbox' style='border: 0; background: #888' onMouseOver='overOption=true' onMouseOut='overOption=false' onClick='updateSelection(this,"+rowID+",\"<?php echo $repo;?>/"+repoListArray[i]+"\",\"deleted\")'> <div class='icon ext-"+fileExt+"'></div>"+repoListArray[i]+"<div class='pullGithub' onMouseOver='overOption=true' onMouseOut='overOption=false'>Pull from Github</div><br></div>";
 					delFilesList += "<span class='rowContent' id='row"+rowID+"Content'></span>";
 				}
 			}
 			
-			compareList += "<br><b style='font-size: 18px'>DELETED FILES:</b><br><br>"+delFilesList;
+			compareList += "<br><br><b style='font-size: 18px'>DELETED FILES:</b><br><br>"+delFilesList;
 			document.getElementById('compareList').innerHTML = compareList;
 			}
 		)
@@ -212,18 +223,35 @@ updateSelection = function(elem,row,repoDir,action) {
 	};
 }
 
+commitChanges = function() {
+	if(selRowArray.length>0) {
+		if (document.fcForm.title.value!="Title..." && document.fcForm.message.value!="Message...") {
+			if (selActionArray[0]=="changed") {
+				document.fcForm.dir.value = selRepoDirArray[0].split('@')[0];
+				document.fcForm.repo.value = selRepoDirArray[0].split('@')[1];
+			}
+			if (selActionArray[0]=="new") {
+				document.fcForm.dir.value = selRepoDirArray[0];
+				document.fcForm.repo.value = "";
+			}
+			if (selActionArray[0]=="deleted") {
+				document.fcForm.dir.value = "";
+				document.fcForm.repo.value = selRepoDirArray[0];
+			}
+			document.fcForm.rowID.value = selRowArray[0];
+			document.fcForm.action.value = selActionArray[0];
+			document.fcForm.submit();
+		} else {
+			alert('Please enter a title & message for the commit');		
+		}
+	} else {
+		alert('Please select some files/folders to commit');
+	}
+	return false;
+}
+	
 gitCommand('repo.show','<?php echo strClean($_POST['repo']);?>');
 </script>
-	
-<form name="fcForm" action="file-control.php" target="fileControl" method="POST">
-<input type="hidden" name="token" value="<?php echo strClean($_POST['token']);?>">
-<input type="hidden" name="username" value="<?php echo strClean($_POST['username']);?>">
-<input type="hidden" name="password" value="<?php echo strClean($_POST['password']);?>">
-<input type="hidden" name="rowID" value="">
-<input type="hidden" name="repo" value="">
-<input type="hidden" name="dir" value="">
-<input type="hidden" name="action" value="">
-</form>
 	
 <iframe name="fileControl" style="display: none"></iframe>
 	
