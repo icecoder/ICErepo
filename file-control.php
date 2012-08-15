@@ -28,7 +28,6 @@ echo "<script>fullRepoPath='".$repo."';</script>";
 <script src="lib/base64.js"></script>
 <script src="lib/github.js"></script>
 <script type="text/javascript" src="lib/difflib.js"></script>
-<script type="text/javascript" src="lib/diffview.js"></script>
 <link rel="stylesheet" type="text/css" href="ice-repo.css">
 </head>
 
@@ -43,8 +42,8 @@ $fileContents = file_get_contents($dir);
 <textarea name="repoContents"></textarea>
 </form>
 
-<?php if ($_POST['action']=="view") {?>
 <script>
+<?php if ($_POST['action']=="view") {?>
 var github = new Github(<?php
 if ($token!="") {
 	echo '{token: "'.strClean($_POST['token']).'", auth: "oauth"}';
@@ -92,6 +91,32 @@ function diffUsingJS (dirContent,repoContent) {
 	
 sendData();
 <?php ;}; ?>
+<?php if ($_POST['action']=="changed") {?>
+	// Update files...
+	console.log('UPDATE PROCESS...');
+	parent.document.getElementById('row'+<?php echo $rowID;?>).style.display = "none";
+	parent.document.getElementById('row'+<?php echo $rowID;?>+'Content').style.display = "none";
+<?php ;}; ?>
+<?php if ($_POST['action']=="new") {?>
+	// Add files...
+	console.log('ADD PROCESS...');
+	parent.document.getElementById('row'+<?php echo $rowID;?>).style.display = "none";
+	parent.document.getElementById('row'+<?php echo $rowID;?>+'Content').style.display = "none";
+<?php ;}; ?>
+<?php if ($_POST['action']=="deleted") {?>
+	// Delete files...
+	console.log('DELETE PROCESS...');
+	parent.document.getElementById('row'+<?php echo $rowID;?>).style.display = "none";
+	parent.document.getElementById('row'+<?php echo $rowID;?>+'Content').style.display = "none";
+<?php ;}; ?>
+<?php
+	echo "console.log('".$_POST['action']."');";
+	echo "console.log('".$_POST['title']."');";
+	echo "console.log('".$_POST['message']."');";
+	echo "console.log('".$rowID."');";
+	echo "console.log('".$repo."');";
+	echo "console.log('".$dir."');";
+?>
 </script>
 	
 </body>
