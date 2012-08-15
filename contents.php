@@ -141,15 +141,15 @@ gitCommand = function(comm,value) {
 				}
 				if (repoArrayPos == "-1") {
 					rowID++;
-					newFilesList += "<div class='row' onClick='getContent("+rowID+",\""+dirListArray[i]+"\")'><input type='checkbox' style='border: 0; background: #888' onMouseOver='overOption=true' onMouseOut='overOption=false'> <div class='icon ext-"+fileExt+"'></div>"+dirListArray[i]+"</div><br>";
+					newFilesList += "<div class='row' onClick='getContent("+rowID+",\""+dirListArray[i]+"\")'><input type='checkbox' style='border: 0; background: #888' onMouseOver='overOption=true' onMouseOut='overOption=false' onClick='updateSelection(this,"+rowID+",\"<?php echo $path;?>/"+dirListArray[i]+"\",\"new\")'> <div class='icon ext-"+fileExt+"'></div>"+dirListArray[i]+"</div><br>";
 					newFilesList += "<span class='rowContent' id='row"+rowID+"Content'></span>";
 				} else if (dirTypeArray[i] == "file" && dirSHAArray[i] != repoSHAArray[repoArrayPos]) {
 					rowID++;
-					compareList += "<div class='row' onClick='getContent("+rowID+",\""+dirListArray[i]+"\")'><input type='checkbox' style='border: 0; background: #888' onMouseOver='overOption=true' onMouseOut='overOption=false'> <div class='icon ext-"+fileExt+"'></div>"+dirListArray[i]+"<div class='pullGithub' onMouseOver='overOption=true' onMouseOut='overOption=false'>Pull from Github</div></div><br>";
+					compareList += "<div class='row' onClick='getContent("+rowID+",\""+dirListArray[i]+"\")'><input type='checkbox' style='border: 0; background: #888' onMouseOver='overOption=true' onMouseOut='overOption=false' onClick='updateSelection(this,"+rowID+",\"<?php echo $path;?>/"+dirListArray[i]+"@<?php echo $repo;?>/"+dirListArray[i]+"\",\"changed\")'> <div class='icon ext-"+fileExt+"'></div>"+dirListArray[i]+"<div class='pullGithub' onMouseOver='overOption=true' onMouseOut='overOption=false'>Pull from Github</div></div><br>";
 					compareList += "<span class='rowContent' id='row"+rowID+"Content'></span>";
 				}
 			}
-			
+
 			compareList += "<br><b style='font-size: 18px'>NEW FILES:</b><br><br>"+newFilesList;
 			
 			delFilesList = "";
@@ -162,7 +162,7 @@ gitCommand = function(comm,value) {
 				}
 				if (dirArrayPos == "-1") {
 					rowID++;
-					delFilesList += "<div class='row' onClick='getContent("+rowID+",\""+repoListArray[i]+"\")'><input type='checkbox' style='border: 0; background: #888' onMouseOver='overOption=true' onMouseOut='overOption=false'> <div class='icon ext-"+fileExt+"'></div>"+repoListArray[i]+"<div class='pullGithub' onMouseOver='overOption=true' onMouseOut='overOption=false'>Pull from Github</div></div><br>";
+					delFilesList += "<div class='row' onClick='getContent("+rowID+",\""+repoListArray[i]+"\")'><input type='checkbox' style='border: 0; background: #888' onMouseOver='overOption=true' onMouseOut='overOption=false' onClick='updateSelection(this,"+rowID+",\"<?php echo $repo;?>/"+repoListArray[i]+"\",\"deleted\")'> <div class='icon ext-"+fileExt+"'></div>"+repoListArray[i]+"<div class='pullGithub' onMouseOver='overOption=true' onMouseOut='overOption=false'>Pull from Github</div></div><br>";
 					delFilesList += "<span class='rowContent' id='row"+rowID+"Content'></span>";
 				}
 			}
@@ -194,6 +194,22 @@ getContent = function(thisRow,path) {
 		}
 		lastRow = thisRow;
 	}
+}
+
+selRowArray = [];
+selRepoDirArray = [];
+selActionArray = [];
+updateSelection = function(elem,row,repoDir,action) {
+	if (elem.checked) {
+		selRowArray.push(row);
+		selRepoDirArray.push(repoDir);
+		selActionArray.push(action);
+	} else {
+		arrayIndex = selRowArray.indexOf(row);
+		selRowArray.splice(arrayIndex,1);
+		selRepoDirArray.splice(arrayIndex,1);
+		selActionArray.splice(arrayIndex,1);
+	};
 }
 
 gitCommand('repo.show','<?php echo strClean($_POST['repo']);?>');
