@@ -139,6 +139,8 @@ $action = strClean($_POST['action']);
 				hideRow(row);
 				if (rowIDArray.length>0) {
 					startProcess();
+				} else {
+					top.document.getElementById('blackMask').style.display = "none";	
 				}
 			} else {
 				alert('Sorry, there was an error adding '+gitRepo);
@@ -153,6 +155,8 @@ $action = strClean($_POST['action']);
 				hideRow(row);
 				if (rowIDArray.length>0) {
 					startProcess();
+				} else {
+					top.document.getElementById('blackMask').style.display = "none";	
 				}
 			} else {
 				alert('Sorry, there was an error deleting '+gitRepo);
