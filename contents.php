@@ -127,7 +127,7 @@ gitCommand = function(comm,value) {
 		repo = repoDir[0].split("/")[1];
 		dir = repoDir[1];		
 		var repo = github.getRepo(user,repo);
-		var user = github.getUser();
+// 		var user = github.getUser();
 		var compareList = "";
 		rowID = 0;
  		repo.getTree('master?recursive=true', function(err, tree) {
@@ -135,7 +135,7 @@ gitCommand = function(comm,value) {
 				repoListArray.push(tree[i].path);
 				repoSHAArray.push(tree[i].sha);
 			}
-			console.log(tree);
+// 			console.log(tree);
 			compareList += "<b style='font-size: 18px'>CHANGED FILES:</b><br><br>";
 			newFilesList = "";
 			for (i=0;i<dirListArray.length;i++) {
