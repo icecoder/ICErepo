@@ -101,6 +101,7 @@ echo '</script>';
 <input type="hidden" name="token" value="<?php echo strClean($_POST['token']);?>">
 <input type="hidden" name="username" value="<?php echo strClean($_POST['username']);?>">
 <input type="hidden" name="password" value="<?php echo strClean($_POST['password']);?>">
+<input type="hidden" name="path" value="<?php echo $path; ?>">	
 <input type="hidden" name="rowID" value="">
 <input type="hidden" name="repo" value="">
 <input type="hidden" name="dir" value="">
@@ -111,10 +112,10 @@ echo '</script>';
 	
 <script>
 var github = new Github(<?php
-if ($token!="") {
+if ($_POST['token']!="") {
 	echo '{token: "'.strClean($_POST['token']).'", auth: "oauth"}';
 } else{
-	echo '{username: "'.strClean($_POST['$username']).'", password: "'.strClean($_POST['$password']).'", auth: "basic"}';
+	echo '{username: "'.strClean($_POST['username']).'", password: "'.strClean($_POST['password']).'", auth: "basic"}';
 }?>);
 
 repoListArray = [];
@@ -148,13 +149,13 @@ gitCommand = function(comm,value) {
 					rowID++;
 					styleExtra = fileExt == 'folder' ? ' style="cursor: default"' : '';
 					clickExtra = fileExt != 'folder' ? ' onClick="getContent('+rowID+',\''+dirListArray[i]+'\')"' : '';
-					newFilesList += "<div class='row' id='row"+rowID+"'"+clickExtra+styleExtra+"><input type='checkbox' style='border: 0; background: #888"+styleExtra+"' onMouseOver='overOption=true' onMouseOut='overOption=false' onClick='updateSelection(this,"+rowID+",\"<?php echo $path;?>/"+dirListArray[i]+"\",\"new\")'> <div class='icon ext-"+fileExt+"'></div>"+dirListArray[i]+"<br></div>";
+					newFilesList += "<div class='row' id='row"+rowID+"'"+clickExtra+styleExtra+"><input type='checkbox' id='checkbox"+rowID+"' style='border: 0; background: #888"+styleExtra+"' onMouseOver='overOption=true' onMouseOut='overOption=false' onClick='updateSelection(this,"+rowID+",\"<?php echo $path;?>/"+dirListArray[i]+"\",\"new\")'> <div class='icon ext-"+fileExt+"'></div>"+dirListArray[i]+"<br></div>";
 					newFilesList += "<span class='rowContent' id='row"+rowID+"Content'></span>";
 				} else if (dirTypeArray[i] == "file" && dirSHAArray[i] != repoSHAArray[repoArrayPos]) {
 					rowID++;
 					styleExtra = fileExt == 'folder' ? ' style="cursor: default"' : '';
 					clickExtra = fileExt != 'folder' ? ' onClick="getContent('+rowID+',\''+dirListArray[i]+'\')"' : '';
-					compareList += "<div class='row' id='row"+rowID+"'"+clickExtra+styleExtra+"><input type='checkbox' style='border: 0; background: #888' onMouseOver='overOption=true' onMouseOut='overOption=false' onClick='updateSelection(this,"+rowID+",\"<?php echo $path;?>/"+dirListArray[i]+"@<?php echo $repo;?>/"+dirListArray[i]+"\",\"changed\")'> <div class='icon ext-"+fileExt+"'></div>"+dirListArray[i]+"<div class='pullGithub' onMouseOver='overOption=true' onMouseOut='overOption=false'>Pull from Github</div><br></div>";
+					compareList += "<div class='row' id='row"+rowID+"'"+clickExtra+styleExtra+"><input type='checkbox' id='checkbox"+rowID+"' style='border: 0; background: #888' onMouseOver='overOption=true' onMouseOut='overOption=false' onClick='updateSelection(this,"+rowID+",\"<?php echo $path;?>/"+dirListArray[i]+"@<?php echo $repo;?>/"+dirListArray[i]+"\",\"changed\")'> <div class='icon ext-"+fileExt+"'></div>"+dirListArray[i]+"<div class='pullGithub' onMouseOver='overOption=true' onMouseOut='overOption=false'>Pull from Github</div><br></div>";
 					compareList += "<span class='rowContent' id='row"+rowID+"Content'></span>";
 				}
 			}
@@ -173,7 +174,7 @@ gitCommand = function(comm,value) {
 					rowID++;
 					styleExtra = fileExt == 'folder' ? ' style="cursor: default"' : '';
 					clickExtra = fileExt != 'folder' ? ' onClick="getContent('+rowID+',\''+repoListArray[i]+'\')"' : '';
-					delFilesList += "<div class='row' id='row"+rowID+"'"+clickExtra+styleExtra+"><input type='checkbox' style='border: 0; background: #888' onMouseOver='overOption=true' onMouseOut='overOption=false' onClick='updateSelection(this,"+rowID+",\"<?php echo $repo;?>/"+repoListArray[i]+"\",\"deleted\")'> <div class='icon ext-"+fileExt+"'></div>"+repoListArray[i]+"<div class='pullGithub' onMouseOver='overOption=true' onMouseOut='overOption=false'>Pull from Github</div><br></div>";
+					delFilesList += "<div class='row' id='row"+rowID+"'"+clickExtra+styleExtra+"><input type='checkbox' id='checkbox"+rowID+"' style='border: 0; background: #888' onMouseOver='overOption=true' onMouseOut='overOption=false' onClick='updateSelection(this,"+rowID+",\"<?php echo $repo;?>/"+repoListArray[i]+"\",\"deleted\")'> <div class='icon ext-"+fileExt+"'></div>"+repoListArray[i]+"<div class='pullGithub' onMouseOver='overOption=true' onMouseOut='overOption=false'>Pull from Github</div><br></div>";
 					delFilesList += "<span class='rowContent' id='row"+rowID+"Content'></span>";
 				}
 			}
@@ -226,20 +227,36 @@ updateSelection = function(elem,row,repoDir,action) {
 commitChanges = function() {
 	if(selRowArray.length>0) {
 		if (document.fcForm.title.value!="Title..." && document.fcForm.message.value!="Message...") {
-			if (selActionArray[0]=="changed") {
-				document.fcForm.dir.value = selRepoDirArray[0].split('@')[0];
-				document.fcForm.repo.value = selRepoDirArray[0].split('@')[1];
+			selRowValue = "";
+			selDirValue = "";
+			selRepoValue = "";
+			selActionValue = "";
+			for (i=0;i<selRowArray.length;i++) {
+				selRowValue += selRowArray[i];
+				if (selActionArray[i]=="changed") {
+					selDirValue += selRepoDirArray[i].split('@')[0];
+					selRepoValue += selRepoDirArray[i].split('@')[1];
+				}
+				if (selActionArray[i]=="new") {
+					selDirValue += selRepoDirArray[i];
+					selRepoValue += "";
+				}
+				if (selActionArray[i]=="deleted") {
+					selDirValue += "";
+					selRepoValue += selRepoDirArray[i];
+				}
+				selActionValue += selActionArray[i];
+				if (i<selRowArray.length-1) {
+					selRowValue += ",";
+					selDirValue += ",";
+					selRepoValue += ",";
+					selActionValue += ",";
+				}
 			}
-			if (selActionArray[0]=="new") {
-				document.fcForm.dir.value = selRepoDirArray[0];
-				document.fcForm.repo.value = "";
-			}
-			if (selActionArray[0]=="deleted") {
-				document.fcForm.dir.value = "";
-				document.fcForm.repo.value = selRepoDirArray[0];
-			}
-			document.fcForm.rowID.value = selRowArray[0];
-			document.fcForm.action.value = selActionArray[0];
+			document.fcForm.rowID.value = selRowValue;
+			document.fcForm.dir.value = selDirValue;
+			document.fcForm.repo.value = selRepoValue;
+			document.fcForm.action.value = selActionValue;
 			document.fcForm.submit();
 		} else {
 			alert('Please enter a title & message for the commit');		
