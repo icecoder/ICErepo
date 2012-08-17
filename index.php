@@ -35,6 +35,14 @@ $repos = array(
 </head>
 
 <body style="margin: 0; overflow: hidden" onLoad="doRepo(document.getElementById('repos').value)">
+	
+<div class="blackMask" id="blackMask" style="display: block">
+	<div id="loadingMsgCenter" class="loadingMsgCenter">
+		<div id="loadingMsgContainer" class="loadingMsgContainer">
+		WORKING...
+		</div>
+	</div>
+</div>
 
 <div style="position: absolute; width: 100%; height: 60px; background: #444; z-index: 1">
 	<select name="repos" id="repos" onChange="doRepo(this.value)" style="margin: 20px 0 0 20px">
