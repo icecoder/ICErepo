@@ -16,13 +16,18 @@ Users can then to pick & choose the files they'd like to commit, provide a commi
 <img src="http://www.icecoder.net/github/screenshot.jpg" alt="ICErepo screenshot">
 
 This lib uses customised & minified versions of these brilliant and time tested repos:
+
 Github API lib: https://github.com/michael/github
+
 JS Diff lib:    https://github.com/cemerick/jsdifflib
 
-Dev schedule:
+**Dev schedule:**
+
+**v0.52**
+Allow users to add new files, type message and commit.
 
 **v0.6**
-Allow users to put a check against new or deleted files, type message and commit.
+Allow users to pull individual files or all files from Github to the server.
 
 **v0.7**
 Setup & oath instructions screen added.
@@ -39,6 +44,4 @@ Beta testing
 **v1.0**
 Version 1 released
 
-Estimated completion date:
-
-Wed 22nd Aug
+**Estimated completion date:** Wed 22nd Aug
