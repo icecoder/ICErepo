@@ -181,6 +181,7 @@ gitCommand = function(comm,value) {
 			
 			compareList += "<br><br><b style='font-size: 18px'>DELETED FILES:</b><br><br>"+delFilesList;
 			document.getElementById('compareList').innerHTML = compareList;
+			top.document.getElementById('blackMask').style.display='none';
 			}
 		)
 	}
@@ -227,6 +228,7 @@ updateSelection = function(elem,row,repoDir,action) {
 commitChanges = function() {
 	if(selRowArray.length>0) {
 		if (document.fcForm.title.value!="Title..." && document.fcForm.message.value!="Message...") {
+			top.document.getElementById('blackMask').style.display = "block";
 			selRowValue = "";
 			selDirValue = "";
 			selRepoValue = "";
