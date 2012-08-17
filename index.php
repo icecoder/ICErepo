@@ -5,7 +5,7 @@ if ($_SESSION['userLevel'] == 0) {
 }
 
 $docRoot = $_SERVER['DOCUMENT_ROOT'];
-$version = "0.5.1";
+$version = "0.5.2";
 
 // AUTHENTICATION
 // Can either be done by oauth, or username & password.
