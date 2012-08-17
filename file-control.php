@@ -3,14 +3,13 @@ session_start();
 if ($_SESSION['userLevel'] == 0) {
 	die("Sorry, you need to be logged in to use ICErepo");
 }
-
+// returns converted entities where there are HTML entity equivalents
 function strClean($var) {
-	// returns converted entities where there are HTML entity equivalents
 	return htmlentities($var, ENT_QUOTES, "UTF-8");
 }
 
+// returns a number, whole or decimal or null
 function numClean($var) {
-	// returns a number, whole or decimal or null
 	return is_numeric($var) ? floatval($var) : false;
 }
 
@@ -19,8 +18,6 @@ $rowID = strClean($_POST['rowID']);
 $repo = strClean($_POST['repo']);
 $dir = strClean($_POST['dir']);
 $action = strClean($_POST['action']);
-
-echo "<script>fullRepoPath='".$repo."';</script>";
 ?>
 <!DOCTYPE html>
 <html>
@@ -36,6 +33,7 @@ echo "<script>fullRepoPath='".$repo."';</script>";
 <body>
 	
 <script>
+	fullRepoPath='<?php echo $repo;?>';
 	var github = new Github(<?php
 	if ($_POST['token']!="") {
 		echo '{token: "'.strClean($_POST['token']).'", auth: "oauth"}';
@@ -59,7 +57,7 @@ echo "<script>fullRepoPath='".$repo."';</script>";
 	<script>
 	rowID = <?php echo $rowID; ?>;
 	sendData = function() {
-		console.log(filePath);
+// 		console.log(filePath);
 		repo.read('master', filePath, function(err, data) {
 			document.fcForm.repoContents.innerHTML=data;
 			dirContent = document.fcForm.fileContents.value;
@@ -135,7 +133,7 @@ echo "<script>fullRepoPath='".$repo."';</script>";
 
 	// Add or Update files...
 	ffAddOrUpdate = function(row,gitRepo,action) {
-		console.log('UPDATE PROCESS...'+row+','+gitRepo+','+action);
+// 		console.log('UPDATE PROCESS...'+row+','+gitRepo+','+action);
 		repo.write('master', gitRepo, document.fcForm['fileContents'+row].value, '<?php echo strClean($_POST['title']); ?>\n\n<?php echo strClean($_POST['message']); ?>', function(err) {
 			if(!err) {
 				hideRow(row);
@@ -148,9 +146,18 @@ echo "<script>fullRepoPath='".$repo."';</script>";
 		});
 	}
 	// Delete files...
-	ffDelete = function(row,repo,action) {
-		console.log('DELETE PROCESS...'+row+','+repo+','+action);
-		hideRow(row);
+	ffDelete = function(row,gitRepo,action) {
+// 		console.log('DELETE PROCESS...'+row+','+gitRepo+','+action);
+		repo.remove('master', gitRepo, function(err) {
+			if(!err) {
+				hideRow(row);
+				if (rowIDArray.length>0) {
+					startProcess();
+				}
+			} else {
+				alert('Sorry, there was an error deleting '+gitRepo);
+			}
+		});
 	}
 		
 	hideRow = function(row) {
@@ -170,7 +177,8 @@ echo "<script>fullRepoPath='".$repo."';</script>";
 			ffAddOrUpdate(rowIDArray[0],repoLoc,actionArray[0]);
 		}
 		if(actionArray[0]=="deleted") {
-			ffDelete(rowIDArray[0],repoArray[0],actionArray[0]);
+			repoLoc = repoArray[0].replace(repoUser+"/"+repoName+"/","");
+			ffDelete(rowIDArray[0],repoLoc,actionArray[0]);
 		}
 	}
 	startProcess();
