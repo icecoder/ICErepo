@@ -23,9 +23,6 @@ JS Diff lib:    https://github.com/cemerick/jsdifflib
 
 **Dev schedule:**
 
-**v0.53**
-Allow users to add new files, type message and commit.
-
 **v0.6**
 Allow users to pull individual files or all files from Github to the server.
 
