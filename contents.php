@@ -103,6 +103,7 @@ echo '</script>';
 <input type="hidden" name="password" value="<?php echo strClean($_POST['password']);?>">
 <input type="hidden" name="path" value="<?php echo $path; ?>">	
 <input type="hidden" name="rowID" value="">
+<input type="hidden" name="gitRepo" value="">
 <input type="hidden" name="repo" value="">
 <input type="hidden" name="dir" value="">
 <input type="hidden" name="action" value="">
@@ -127,7 +128,6 @@ gitCommand = function(comm,value) {
 		repo = repoDir[0].split("/")[1];
 		dir = repoDir[1];		
 		var repo = github.getRepo(user,repo);
-// 		var user = github.getUser();
 		var compareList = "";
 		rowID = 0;
  		repo.getTree('master?recursive=true', function(err, tree) {
@@ -135,7 +135,6 @@ gitCommand = function(comm,value) {
 				repoListArray.push(tree[i].path);
 				repoSHAArray.push(tree[i].sha);
 			}
-// 			console.log(tree);
 			compareList += "<b style='font-size: 18px'>CHANGED FILES:</b><br><br>";
 			newFilesList = "";
 			for (i=0;i<dirListArray.length;i++) {
@@ -256,6 +255,7 @@ commitChanges = function() {
 				}
 			}
 			document.fcForm.rowID.value = selRowValue;
+			document.fcForm.gitRepo.value = "<?php echo $repo;?>";
 			document.fcForm.dir.value = selDirValue;
 			document.fcForm.repo.value = selRepoValue;
 			document.fcForm.action.value = selActionValue;
