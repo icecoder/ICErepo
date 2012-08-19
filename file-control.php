@@ -19,7 +19,7 @@ $path = strClean($_POST['path']);
 $rowID = strClean($_POST['rowID']);
 $repo = strClean($_POST['repo']);
 $dir = strClean($_POST['dir']);
-$action = strClean($_POST['action']);
+$action = str_replace("PULL:","",strClean($_POST['action']));
 ?>
 <!DOCTYPE html>
 <html>
@@ -28,7 +28,7 @@ $action = strClean($_POST['action']);
 <script src="lib/underscore-min.js"></script>
 <script src="lib/base64.js"></script>
 <script src="lib/github.js"></script>
-<script type="text/javascript" src="lib/difflib.js"></script>
+<script src="lib/difflib.js"></script>
 <link rel="stylesheet" type="text/css" href="ice-repo.css">
 </head>
 
@@ -47,6 +47,19 @@ $action = strClean($_POST['action']);
 	repoName = gitRepo.split('/')[1];
 	filePath = fullRepoPath.replace(repoUser+"/"+repoName+"/","");
 	var repo = github.getRepo(repoUser,repoName);
+	
+	removeFirstArrayItems = function() {
+		rowIDArray.splice(0,1);
+		repoArray.splice(0,1);
+		dirArray.splice(0,1);
+		actionArray.splice(0,1);	
+	}
+		
+	hideRow = function(row) {
+		parent.document.getElementById('checkbox'+row).checked=false;
+		parent.updateSelection(parent.document.getElementById('checkbox'+row));
+		parent.document.getElementById('row'+row).style.display = parent.document.getElementById('row'+row+'Content').style.display = "none";
+	}
 </script>
 
 <?php if ($_POST['action']=="view") {
@@ -95,6 +108,76 @@ $action = strClean($_POST['action']);
 		
 	sendData();
 	</script>
+<?php } else if (substr($_POST['action'],0,5)=="PULL:") { ?>
+	<?php
+	$rowIDArray = explode(",",$rowID);
+	$repoArray = explode(",",$repo);
+	$dirArray = explode(",",$dir);
+	$actionArray = explode(",",$action);
+	?>
+	<form name="fcForm" action="file-control.php" method="POST">
+	<?php
+	echo '<input type="hidden" name="rowID" value="'.$rowID.'">';
+	echo '<input type="hidden" name="repo" value="'.$repo.'">';
+	echo '<input type="hidden" name="dir" value="'.$dir.'">';
+	for ($i=0;$i<count($rowIDArray);$i++) {
+		if ($repoArray[$i]!="") {
+			echo '<textarea name="repoContents'.$rowIDArray[$i].'"></textarea>';
+		}
+	}
+	?>
+	echo '<input type="hidden" name="action" value="savePulls">';
+	</form>
+	<script>
+	<?php
+	$rowIDVal = $repoVal = $dirVal = $actionVal = "";
+	for ($i=0;$i<count($rowIDArray);$i++) {
+		$rowIDVal .= $rowIDArray[$i];
+		$repoVal .= "'".$repoArray[$i]."'";
+		$dirVal .= "'".$dirArray[$i]."'";
+		$actionVal .= "'".$actionArray[$i]."'";
+		if ($i<count($rowIDArray)-1) {
+			$rowIDVal .= ",";
+			$repoVal .= ",";
+			$dirVal .= ",";
+			$actionVal .= ",";
+		}
+	}
+	?>
+	rowIDArray = [<?php echo $rowIDVal;?>];
+	repoArray = [<?php echo $repoVal;?>];
+	dirArray = [<?php echo $dirVal;?>];
+	actionArray = [<?php echo $actionVal;?>];
+	getData = function() {
+		if (actionArray[0]!="new") {
+			repo.read('master', repoArray[0], function(err, data) {
+				document.fcForm['repoContents'+rowIDArray[0]].innerHTML=data;
+				if(!err) {
+					removeFirstArrayItems();
+					if (rowIDArray.length>0) {
+						getData();
+					} else {
+						document.fcForm.submit();
+					}
+				} else {
+					alert('Sorry, there was an error reading '+repoArray[0]);
+				}
+			});
+		} else {
+			removeFirstArrayItems();
+			if (rowIDArray.length>0) {
+				getData();
+			}	else {
+				document.fcForm.submit();	
+			}
+		}
+	}
+	getData();
+	</script>
+<?php } else if ($_POST['action']=="savePulls") { ?>
+	<script>
+	console.log('save it!');				
+	</script>
 <?php } else { ?>
 	<?php
 	$rowIDArray = explode(",",$rowID);
@@ -137,6 +220,7 @@ $action = strClean($_POST['action']);
 	ffAddOrUpdate = function(row,gitRepo,action) {
 		repo.write('master', gitRepo, document.fcForm['fileContents'+row].value, '<?php echo strClean($_POST['title']); ?>\n\n'+parent.document.fcForm.message.value, function(err) {
 			if(!err) {
+				removeFirstArrayItems();
 				hideRow(row);
 				if (rowIDArray.length>0) {
 					startProcess();
@@ -152,6 +236,7 @@ $action = strClean($_POST['action']);
 	ffDelete = function(row,gitRepo,action) {
 		repo.remove('master', gitRepo, function(err) {
 			if(!err) {
+				removeFirstArrayItems();
 				hideRow(row);
 				if (rowIDArray.length>0) {
 					startProcess();
@@ -162,16 +247,6 @@ $action = strClean($_POST['action']);
 				alert('Sorry, there was an error deleting '+gitRepo);
 			}
 		});
-	}
-		
-	hideRow = function(row) {
-		rowIDArray.splice(0,1);
-		repoArray.splice(0,1);
-		dirArray.splice(0,1);
-		actionArray.splice(0,1);
-		parent.document.getElementById('checkbox'+row).checked=false;
-		parent.updateSelection(parent.document.getElementById('checkbox'+row));
-		parent.document.getElementById('row'+row).style.display = parent.document.getElementById('row'+row+'Content').style.display = "none";
 	}
 
 	startProcess = function() {
