@@ -13,6 +13,8 @@ function numClean($var) {
 	return is_numeric($var) ? floatval($var) : false;
 }
 
+$repoPath = strClean($_POST['repoPath']);
+$gitRepo = strClean($_POST['gitRepo']);
 $path = strClean($_POST['path']);
 $rowID = strClean($_POST['rowID']);
 $repo = strClean($_POST['repo']);
@@ -34,14 +36,15 @@ $action = strClean($_POST['action']);
 	
 <script>
 	fullRepoPath='<?php echo $repo;?>';
+	gitRepo='<?php echo $gitRepo;?>';
 	var github = new Github(<?php
 	if ($_POST['token']!="") {
 		echo '{token: "'.strClean($_POST['token']).'", auth: "oauth"}';
 	} else{
 		echo '{username: "'.strClean($_POST['username']).'", password: "'.strClean($_POST['password']).'", auth: "basic"}';
 	}?>);
-	repoUser = fullRepoPath.split('/')[0];
-	repoName = fullRepoPath.split('/')[1];
+	repoUser = gitRepo.split('/')[0];
+	repoName = gitRepo.split('/')[1];
 	filePath = fullRepoPath.replace(repoUser+"/"+repoName+"/","");
 	var repo = github.getRepo(repoUser,repoName);
 </script>
@@ -57,7 +60,6 @@ $action = strClean($_POST['action']);
 	<script>
 	rowID = <?php echo $rowID; ?>;
 	sendData = function() {
-// 		console.log(filePath);
 		repo.read('master', filePath, function(err, data) {
 			document.fcForm.repoContents.innerHTML=data;
 			dirContent = document.fcForm.fileContents.value;
@@ -133,8 +135,7 @@ $action = strClean($_POST['action']);
 
 	// Add or Update files...
 	ffAddOrUpdate = function(row,gitRepo,action) {
-// 		console.log('UPDATE PROCESS...'+row+','+gitRepo+','+action);
-		repo.write('master', gitRepo, document.fcForm['fileContents'+row].value, '<?php echo strClean($_POST['title']); ?>\n\n<?php echo strClean($_POST['message']); ?>', function(err) {
+		repo.write('master', gitRepo, document.fcForm['fileContents'+row].value, '<?php echo strClean($_POST['title']); ?>\n\n'+parent.document.fcForm.message.value, function(err) {
 			if(!err) {
 				hideRow(row);
 				if (rowIDArray.length>0) {
@@ -149,7 +150,6 @@ $action = strClean($_POST['action']);
 	}
 	// Delete files...
 	ffDelete = function(row,gitRepo,action) {
-// 		console.log('DELETE PROCESS...'+row+','+gitRepo+','+action);
 		repo.remove('master', gitRepo, function(err) {
 			if(!err) {
 				hideRow(row);
