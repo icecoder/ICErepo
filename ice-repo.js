@@ -1,4 +1,5 @@
 pullContent = function(thisRow,thisPath,thisRepo,thisAction) {
+	
 	top.document.getElementById('blackMask').style.display = "block";
 	if (thisRow=="selected") {
 		top.selRowValue = "";
@@ -7,13 +8,15 @@ pullContent = function(thisRow,thisPath,thisRepo,thisAction) {
 		top.selActionValue = "";
 		for (i=0;i<top.selRowArray.length;i++) {
 			top.selRowValue += top.selRowArray[i];
-			repoUser = top.selRepoDirArray[i].split('@')[1].split('/')[0];
-			repoName = top.selRepoDirArray[i].split('@')[1].split('/')[1];
 			if (top.selActionArray[i]=="changed") {
+				repoUser = top.selRepoDirArray[i].split('@')[1].split('/')[0];
+				repoName = top.selRepoDirArray[i].split('@')[1].split('/')[1];
 				top.selDirValue += top.selRepoDirArray[i].split('@')[0];
 				top.selRepoValue += top.selRepoDirArray[i].split('@')[1].replace(repoUser+"/"+repoName+"/","");
 			}
 			if (top.selActionArray[i]=="deleted") {
+				repoUser = top.selRepoDirArray[i].split('/')[0];
+				repoName = top.selRepoDirArray[i].split('/')[1];
 				top.selDirValue += "";
 				top.selRepoValue += selRepoDirArray[i].replace(repoUser+"/"+repoName+"/","");
 			}
