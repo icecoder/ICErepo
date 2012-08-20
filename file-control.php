@@ -19,7 +19,7 @@ $path = strClean($_POST['path']);
 $rowID = strClean($_POST['rowID']);
 $repo = strClean($_POST['repo']);
 $dir = strClean($_POST['dir']);
-$action = str_replace("PULL:","",strClean($_POST['action']));
+$action = str_replace("PULL:","",str_replace("SAVEPULLS:","",strClean($_POST['action'])));
 ?>
 <!DOCTYPE html>
 <html>
@@ -120,13 +120,14 @@ $action = str_replace("PULL:","",strClean($_POST['action']));
 	echo '<input type="hidden" name="rowID" value="'.$rowID.'">';
 	echo '<input type="hidden" name="repo" value="'.$repo.'">';
 	echo '<input type="hidden" name="dir" value="'.$dir.'">';
+	echo '<input type="hidden" name="action" value="SAVEPULLS:'.$action.'">';
+	echo '<input type="hidden" name="path" value="'.$path.'">';
 	for ($i=0;$i<count($rowIDArray);$i++) {
 		if ($repoArray[$i]!="") {
 			echo '<textarea name="repoContents'.$rowIDArray[$i].'"></textarea>';
 		}
 	}
 	?>
-	echo '<input type="hidden" name="action" value="savePulls">';
 	</form>
 	<script>
 	<?php
@@ -174,10 +175,31 @@ $action = str_replace("PULL:","",strClean($_POST['action']));
 	}
 	getData();
 	</script>
-<?php } else if ($_POST['action']=="savePulls") { ?>
-	<script>
-	console.log('save it!');				
-	</script>
+<?php } else if (substr($_POST['action'],0,10)=="SAVEPULLS:") { ?>
+	<?php
+		$rowIDArray = explode(",",$rowID);
+		$repoArray = explode(",",$repo);
+		$dirArray = explode(",",$dir);
+		$actionArray = explode(",",$action);
+		for ($i=0;$i<count($rowIDArray);$i++) {
+			if ($actionArray[$i]!="new") {
+				$dirs = explode("/",$repoArray[$i]);
+				$relDir = "";
+				for ($j=0;$j<count($dirs)-1;$j++) {
+					$relDir .= "/".$dirs[$j];
+					if (!is_dir($path.$relDir)) {
+						mkdir($path.$relDir, 0755);
+					}
+				}
+				$fh = fopen($path."/".$repoArray[$i], 'w') or die("<script>alert('Sorry, there was a problem pulling ".$repoArray[$i].". Either the file is unavailable on Github or server permissions aren\'t allowing it to be created/updated.');top.document.getElementById('blackMask').style.display='none';</script>");
+				fwrite($fh, $_POST['repoContents'.$rowIDArray[$i]]);
+				fclose($fh);
+// 				echo "<script>removeFirstArrayItems()</script>";
+				echo "<script>hideRow(".$rowIDArray[$i].")</script>";
+			}
+		}
+		echo "<script>top.document.getElementById('blackMask').style.display = 'none'</script>";
+	?>
 <?php } else { ?>
 	<?php
 	$rowIDArray = explode(",",$rowID);
