@@ -5,7 +5,7 @@ if ($_SESSION['userLevel'] == 0) {
 }
 
 $docRoot = $_SERVER['DOCUMENT_ROOT'];
-$version = "0.6.0";
+$version = "0.7.0";
 
 // AUTHENTICATION
 // Can either be done by oauth, or username & password.
@@ -56,7 +56,7 @@ $repos = array(
 	?>
 	</select>
 	
-	<div class="pullGithub" style="margin-top: 20px; margin-left: 5px" onClick="pullContent('selected')">Pull all from Github</div>
+	<div class="pullGithub" style="margin-top: 12px; margin-left: -22px" onClick="pullContent('selected')">Pull selected from Github</div>
 	<div class="logo"><img src="images/ice-repo.gif" alt="ICErepo"></div>
 </div>
 	
