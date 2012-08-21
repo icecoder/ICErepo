@@ -14,11 +14,15 @@ pullContent = function(thisRow,thisPath,thisRepo,thisAction) {
 				top.selDirValue += top.selRepoDirArray[i].split('@')[0];
 				top.selRepoValue += top.selRepoDirArray[i].split('@')[1].replace(repoUser+"/"+repoName+"/","");
 			}
+			if (top.selActionArray[i]=="new") {
+				top.selDirValue += top.selRepoDirArray[i];
+				top.selRepoValue += "";
+			}
 			if (top.selActionArray[i]=="deleted") {
 				repoUser = top.selRepoDirArray[i].split('/')[0];
 				repoName = top.selRepoDirArray[i].split('/')[1];
 				top.selDirValue += "";
-				top.selRepoValue += selRepoDirArray[i].replace(repoUser+"/"+repoName+"/","");
+				top.selRepoValue += top.selRepoDirArray[i].replace(repoUser+"/"+repoName+"/","");
 			}
 			top.selActionValue += top.selActionArray[i];
 			if (i<top.selRowArray.length-1) {
