@@ -155,22 +155,14 @@ $action = str_replace("PULL:","",str_replace("SAVEPULLS:","",strClean($_POST['ac
 				document.fcForm['repoContents'+rowIDArray[0]].innerHTML=data;
 				if(!err) {
 					removeFirstArrayItems();
-					if (rowIDArray.length>0) {
-						getData();
-					} else {
-						document.fcForm.submit();
-					}
+					rowIDArray.length>0 ? getData() : document.fcForm.submit();
 				} else {
 					alert('Sorry, there was an error reading '+repoArray[0]);
 				}
 			});
 		} else {
 			removeFirstArrayItems();
-			if (rowIDArray.length>0) {
-				getData();
-			}	else {
-				document.fcForm.submit();	
-			}
+			rowIDArray.length>0 ? getData() : document.fcForm.submit();
 		}
 	}
 	getData();
@@ -196,6 +188,13 @@ $action = str_replace("PULL:","",str_replace("SAVEPULLS:","",strClean($_POST['ac
 				fclose($fh);
 // 				echo "<script>removeFirstArrayItems()</script>";
 				echo "<script>hideRow(".$rowIDArray[$i].")</script>";
+			} else {
+				is_dir($dir) ? $success = rmdir($dir) : $success = unlink($dir);
+				if (!$success) {
+					echo "<script>alert('Sorry, couldn\'t delete ".$dir."\\n\\nMaybe you need to give file permissions for it to be deleted?')</script>";
+				} else {
+					echo "<script>hideRow(".$rowIDArray[$i].")</script>";
+				}
 			}
 		}
 		echo "<script>top.document.getElementById('blackMask').style.display = 'none'</script>";
@@ -244,11 +243,7 @@ $action = str_replace("PULL:","",str_replace("SAVEPULLS:","",strClean($_POST['ac
 			if(!err) {
 				removeFirstArrayItems();
 				hideRow(row);
-				if (rowIDArray.length>0) {
-					startProcess();
-				} else {
-					top.document.getElementById('blackMask').style.display = "none";	
-				}
+				rowIDArray.length>0 ? startProcess() : top.document.getElementById('blackMask').style.display = "none";
 			} else {
 				alert('Sorry, there was an error adding '+gitRepo);
 			}
@@ -260,11 +255,7 @@ $action = str_replace("PULL:","",str_replace("SAVEPULLS:","",strClean($_POST['ac
 			if(!err) {
 				removeFirstArrayItems();
 				hideRow(row);
-				if (rowIDArray.length>0) {
-					startProcess();
-				} else {
-					top.document.getElementById('blackMask').style.display = "none";	
-				}
+				rowIDArray.length>0 ? startProcess() : top.document.getElementById('blackMask').style.display = "none";
 			} else {
 				alert('Sorry, there was an error deleting '+gitRepo);
 			}
