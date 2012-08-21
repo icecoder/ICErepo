@@ -30,10 +30,11 @@ textarea, input {font-family: arial, verdana, helvetica, sans-serif; padding: 4p
 	-moz-box-shadow: 8px 8px 8px 8px rgba(0,0,0,0.4);
 	box-shadow: 4px 4px 8px 4px rgba(0,0,0,0.4);}
 
-.row {position: relative; display: inline-block; background: #ddd; width: 900px; padding: 7px; margin-bottom: 2px; cursor: pointer}
+.row {position: relative; display: inline-block; background: #ddd; width: 880px; padding: 10px 7px; margin-bottom: 2px; cursor: pointer; padding-left: 35px}
 .row .icon {display: inline-block; width: 16px; height: 16px; margin-right: 7px; background-image:url(images/file-folder-icons.png); background-repeat: no-repeat}
+.row .checkbox {position: absolute; display: inline-block; height: 38px; width: 30px; top: -4px; left: 0px}
 .rowContent {position: relative; display: none; background: #eee; width: 100%; height: 300px; padding: 7px; margin-bottom: 10px; overflow: auto}
-.pullGithub {position: absolute; display: inline-block; left: 820px; padding: 3px; background: #aaa; color: #fff; font-size: 10px; cursor: pointer}
+.pullGithub {position: absolute; display: inline-block; top: 7px; left: 822px; padding: 5px; background: #aaa; color: #fff; font-size: 10px; cursor: pointer}
 .logo {position: absolute; display: inline-block; left: 1107px; top: 12px}
 
 .commitPane {position: fixed; background: #ccc; width: 270px; height: 300px; left: 960px; top: 0px; padding: 20px 10px 10px 10px; z-index: 100}
