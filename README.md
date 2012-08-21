@@ -21,10 +21,30 @@ Github API lib: https://github.com/michael/github
 
 JS Diff lib:    https://github.com/cemerick/jsdifflib
 
-**Dev schedule:**
+###Installation
 
-**v0.7**
-Setup & oath instructions screen added.
+####Step 1: Clone the repo
+
+```
+$ git clone git@github:mattpass/ICErepo
+```
+
+####Step 2: Enter your auth settings
+```
+Open index.php and enter either your Github oauth token or username & password
+oauth is recommended here, view http://developer.github.com/v3/oauth/ for info
+(If using oauth ensure you have repo scope and your app is granted the URL you'll run under)
+
+```
+
+####Step 3: Enter your repo/server settings
+```
+Also in index.php enter the repo and corresponding server paths
+Once done, enter 'selected' as a 3rd array param next to your default repo/server option
+Upload ICErepo & visit in a web browser
+```
+
+**Dev schedule:**
 
 **v0.8**
 Bug testing, refactoring & optimisation.
