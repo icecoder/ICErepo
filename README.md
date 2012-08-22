@@ -33,14 +33,15 @@ $ git clone git@github:mattpass/ICErepo
 ```
 Open index.php and enter either your Github oauth token or username & password
 oauth is recommended here, view http://developer.github.com/v3/oauth/ for info
-(If using oauth ensure you have repo scope and your app is granted the URL you'll run under)
+(If using oauth ensure you have repo scope & your app is granted the URL you'll run under)
 
 ```
 
 ####Step 3: Enter your repo/server settings
 ```
-Also in index.php enter the repo and corresponding server paths
+Also in index.php enter the repo & corresponding server paths
 Once done, enter 'selected' as a 3rd array param next to your default repo/server option
+Finally, set $_SESSION['userLevel'] with your own login system (or just uncomment line 3)
 Upload ICErepo & visit in a web browser
 ```
 
