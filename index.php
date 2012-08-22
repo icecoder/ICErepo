@@ -1,5 +1,6 @@
 <?php
 session_start();
+// $_SESSION['userLevel'] = 10;
 if ($_SESSION['userLevel'] == 0) {
 	die("Sorry, you need to be logged in to use ICErepo");
 }
@@ -57,7 +58,8 @@ $repos = array(
 	</select>
 	
 	<div class="pullGithub" style="margin-top: 12px; margin-left: -22px" onClick="pullContent('selected')">Pull selected from Github</div>
-	<div class="logo"><img src="images/ice-repo.gif" alt="ICErepo"></div>
+	<div class="version"><?php echo $version;?></div>
+	<img src="images/ice-repo.gif" alt="ICErepo" class="logo">
 </div>
 	
 <script>

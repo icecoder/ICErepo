@@ -35,7 +35,8 @@ textarea, input {font-family: arial, verdana, helvetica, sans-serif; padding: 4p
 .row .checkbox {position: absolute; display: inline-block; height: 38px; width: 30px; top: -4px; left: 0px}
 .rowContent {position: relative; display: none; background: #eee; width: 100%; height: 300px; padding: 7px; margin-bottom: 10px; overflow: auto}
 .pullGithub {position: absolute; display: inline-block; top: 7px; left: 822px; padding: 5px; background: #aaa; color: #fff; font-size: 10px; cursor: pointer}
-.logo {position: absolute; display: inline-block; left: 1107px; top: 12px}
+.version {position: absolute; display: inline-block; width: 100px; left: 1000px; top: 33px; font-size: 10px; color: #bbb; text-align: right}
+.logo {position: absolute; left: 1107px; top: 12px}
 
 .commitPane {position: fixed; background: #ccc; width: 270px; height: 300px; left: 960px; top: 0px; padding: 20px 10px 10px 10px; z-index: 100}
 
