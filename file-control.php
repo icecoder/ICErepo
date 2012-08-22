@@ -67,16 +67,14 @@ $action = str_replace("PULL:","",str_replace("SAVEPULLS:","",strClean($_POST['ac
 
 	<form name="fcForm">
 	<textarea name="fileContents"><?php echo htmlentities($fileContents); ?></textarea>
-	<textarea name="repoContents"></textarea>
 	</form>
 	
 	<script>
 	rowID = <?php echo $rowID; ?>;
 	sendData = function() {
 		repo.read('master', filePath, function(err, data) {
-			document.fcForm.repoContents.innerHTML=data;
 			dirContent = document.fcForm.fileContents.value;
-			repoContent = document.fcForm.repoContents.value;
+			repoContent = data;
 			diffUsingJS(dirContent,repoContent);
 			parent.document.getElementById("row"+rowID+"Content").style.display = "inline-block";
 		});
