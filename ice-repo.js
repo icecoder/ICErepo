@@ -1,6 +1,5 @@
 pullContent = function(thisRow,thisPath,thisRepo,thisAction) {
-	
-	top.document.getElementById('blackMask').style.display = "block";
+	get('blackMask','top').style.display = "block";
 	if (thisRow=="selected") {
 		top.selRowValue = "";
 		top.selDirValue = "";
