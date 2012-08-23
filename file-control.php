@@ -25,10 +25,12 @@ $action = str_replace("PULL:","",str_replace("SAVEPULLS:","",strClean($_POST['ac
 <html>
 <head>
 <title>ICErepo v<?php echo $version;?></title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <script src="lib/underscore-min.js"></script>
 <script src="lib/base64.js"></script>
 <script src="lib/github.js"></script>
 <script src="lib/difflib.js"></script>
+<script src="ice-repo.js"></script>
 <link rel="stylesheet" type="text/css" href="ice-repo.css">
 </head>
 
@@ -56,9 +58,11 @@ $action = str_replace("PULL:","",str_replace("SAVEPULLS:","",strClean($_POST['ac
 	}
 		
 	hideRow = function(row) {
-		parent.document.getElementById('checkbox'+row).checked=false;
-		parent.updateSelection(parent.document.getElementById('checkbox'+row));
-		parent.document.getElementById('row'+row).style.display = parent.document.getElementById('row'+row+'Content').style.display = "none";
+		top.rowCount--;
+		updateInfo('parent');
+		get('checkbox'+row,'parent').checked=false;
+		parent.updateSelection(get('checkbox'+row,'parent'));
+		get('row'+row,'parent').style.display = get('row'+row+'Content','parent').style.display = "none";
 	}
 </script>
 
@@ -76,7 +80,7 @@ $action = str_replace("PULL:","",str_replace("SAVEPULLS:","",strClean($_POST['ac
 			dirContent = document.fcForm.fileContents.value;
 			repoContent = data;
 			diffUsingJS(dirContent,repoContent);
-			parent.document.getElementById("row"+rowID+"Content").style.display = "inline-block";
+			get("row"+rowID+"Content","parent").style.display = "inline-block";
 		});
 	}
 		
@@ -85,7 +89,7 @@ $action = str_replace("PULL:","",str_replace("SAVEPULLS:","",strClean($_POST['ac
 		var newtxt = difflib.stringAsLines(repoContent);
 		var sm = new difflib.SequenceMatcher(base, newtxt);
 		var opcodes = sm.get_opcodes();
-		var diffoutputdiv = parent.document.getElementById("row"+rowID+"Content");
+		var diffoutputdiv = get("row"+rowID+"Content","parent");
 		while (diffoutputdiv.firstChild) diffoutputdiv.removeChild(diffoutputdiv.firstChild);
 		var contextSize = ""; // optional
 		contextSize = contextSize ? contextSize : null;
@@ -181,21 +185,21 @@ $action = str_replace("PULL:","",str_replace("SAVEPULLS:","",strClean($_POST['ac
 						mkdir($path.$relDir, 0755);
 					}
 				}
-				$fh = fopen($path."/".$repoArray[$i], 'w') or die("<script>alert('Sorry, there was a problem pulling ".$repoArray[$i].". Either the file is unavailable on Github or server permissions aren\'t allowing it to be created/updated.');top.document.getElementById('blackMask').style.display='none';</script>");
+				$fh = fopen($path."/".$repoArray[$i], 'w') or die("<script>alert('Sorry, there was a problem pulling ".$repoArray[$i].". Either the file is unavailable on Github or server permissions aren\'t allowing it to be created/updated.');get('blackMask','top').style.display='none';</script>");
 				fwrite($fh, $_POST['repoContents'.$rowIDArray[$i]]);
 				fclose($fh);
 // 				echo "<script>removeFirstArrayItems()</script>";
-				echo "<script>hideRow(".$rowIDArray[$i].")</script>";
+				echo "<script>hideRow(".$rowIDArray[$i].");top.newCount--;</script>";
 			} else {
 				is_dir($dir) ? $success = rmdir($dir) : $success = unlink($dir);
 				if (!$success) {
 					echo "<script>alert('Sorry, couldn\'t delete ".$dir."\\n\\nMaybe you need to give file permissions for it to be deleted?')</script>";
 				} else {
-					echo "<script>hideRow(".$rowIDArray[$i].")</script>";
+					echo "<script>hideRow(".$rowIDArray[$i].");top.deletedCount--;</script>";
 				}
 			}
 		}
-		echo "<script>top.document.getElementById('blackMask').style.display = 'none'</script>";
+		echo "<script>get('blackMask','top').style.display = 'none'</script>";
 	?>
 <?php } else { ?>
 	<?php
@@ -241,7 +245,8 @@ $action = str_replace("PULL:","",str_replace("SAVEPULLS:","",strClean($_POST['ac
 			if(!err) {
 				removeFirstArrayItems();
 				hideRow(row);
-				rowIDArray.length>0 ? startProcess() : top.document.getElementById('blackMask').style.display = "none";
+				top.newCount--;
+				rowIDArray.length>0 ? startProcess() : get('blackMask','top').style.display = "none";
 			} else {
 				alert('Sorry, there was an error adding '+gitRepo);
 			}
@@ -253,7 +258,8 @@ $action = str_replace("PULL:","",str_replace("SAVEPULLS:","",strClean($_POST['ac
 			if(!err) {
 				removeFirstArrayItems();
 				hideRow(row);
-				rowIDArray.length>0 ? startProcess() : top.document.getElementById('blackMask').style.display = "none";
+				top.deletedCount--;
+				rowIDArray.length>0 ? startProcess() : get('blackMask','top').style.display = "none";
 			} else {
 				alert('Sorry, there was an error deleting '+gitRepo);
 			}
