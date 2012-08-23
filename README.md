@@ -1,15 +1,17 @@
 ICErepo
 =======
 
-Show diffs, push, pull &amp; sync your site with Github repo's.
+Show diffs, push, pull &amp; sync your site and Github repo's.
 
-While Github has a fantastic website, mobile app, desktop app and of course bash system, there's no web based UI I can find to sync your website code with Github repo's. That's what ICErepo provides.
+While Github has a fantastic website, mobile app, desktop app and of course bash system, there's no web based UI I can find to sync your website code with Github repo's or vice versa. That's what ICErepo provides.
 
 Originally intended to be a plugin for ICEcoder (https://github.com/mattpass/ICEcoder), I have decided to make it a standalone lib so it can run by itself or easily be integrated into any existing system.
 
-The aim is a simple UI to view diffs between your server dir's and Github repo's. This list will consist of new files (those only on server), deleted files (those only on Github) and changed files (files that exist in both places but are different). Files that exist in both locations and the same are not shown to keep things minimalist.
+The aim is a simple UI to view diffs between your server dir's and related Github repo's. This list will consist of new files (those only on server), deleted files (those only on Github) and changed files (files that exist in both places but are different). Files that exist in both locations and the same are not shown to keep things minimalist.
 
-Users can then to pick & choose the files they'd like to commit, provide a commit message and push to Github. Those that are only on the server are pushed to Github. Those no longer on the server are removed from Github. Those that have changed are patched over the top of the existing Github held file. As each file is synced by the user to match the server it dissapears from the UI list.
+Users can then to pick & choose the files & folder they'd like to commit, provide a title and message, then commit to Github. As each file is synced by the user to match the server it dissapears from the UI list. Alternatively you can pull files & folders from Github to sync your server dir's with the repo itself.
+
+Cool huh?
 
 **Current screnshot:**
 
@@ -37,12 +39,12 @@ oauth is recommended here, view http://developer.github.com/v3/oauth/ for info
 
 ```
 
-####Step 3: Enter your repo/server settings
+####Step 3: Enter your repo & server dir settings
 ```
-Also in index.php enter the repo & corresponding server paths
-Once done, enter 'selected' as a 3rd array param next to your default repo/server option
-Finally, set $_SESSION['userLevel'] with your own login system (or just uncomment line 3)
-Upload ICErepo & visit in a web browser
+Also in index.php, enter the repo & corresponding server paths
+Optionally, enter 'selected' as a 3rd param next to your default repo/server option to autoloaded that.
+Finally, tie in $_SESSION['userLevel'] with your own login system, or uncomment line 3 to use immediately
+Upload ICErepo, visit in a web browser & enjoy
 ```
 
 **Dev schedule:**
