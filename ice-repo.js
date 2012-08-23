@@ -44,3 +44,11 @@ pullContent = function(thisRow,thisPath,thisRepo,thisAction) {
 	top.fcFormAlias.action.value = "PULL:"+top.selActionValue;
 	top.fcFormAlias.submit();
 }
+	
+get = function(elem,context) {
+	return context ? window[context].document.getElementById(elem) : document.getElementById(elem);
+}
+	
+updateInfo = function(context) {
+	get('infoPane',context).innerHTML = "<b style='font-size: 18px'>INFO:</b><br><br><b>"+top.rowCount+" files</b><br><br>"+top.changedCount+" changed<br>"+top.newCount+" new<br>"+top.deletedCount+" deleted";		
+}
