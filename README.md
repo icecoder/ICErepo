@@ -58,5 +58,3 @@ Beta testing
 
 **v1.0**
 Version 1 released
-
-**Estimated completion date:** Wed 22nd Aug
