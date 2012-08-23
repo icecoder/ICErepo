@@ -18,6 +18,7 @@ function numClean($var) {
 <html>
 <head>
 <title>ICErepo v<?php echo $version;?></title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <script src="lib/base64.js"></script>
 <script src="lib/github.js"></script>
 <script src="lib/difflib.js"></script>
@@ -57,11 +58,15 @@ $i=0;
 $dirListArray = array();
 $dirSHAArray = array();
 $dirTypeArray = array();
+$finfo = finfo_open(FILEINFO_MIME_TYPE);
 foreach ($objectList as $objectRef) {
 	$fileFolderName = rtrim(substr($objectRef->getPathname(), strlen($path)),"..");
 	if ($objectRef->getFilename()!="." && $fileFolderName[strlen($fileFolderName)-1]!="/") {
 			$contents = file_get_contents($path.$fileFolderName);
-			$store = "blob ".strlen($contents)."\0".$contents;
+			if (strpos(finfo_file($finfo, $path.$fileFolderName),"text")===0) {
+				$contents = str_replace("\r","",$contents);
+			};
+			$store = "blob ".strlen($contents)."\000".$contents;
 			$i++;
 			array_push($dirListArray,ltrim($fileFolderName,"/"));
 			array_push($dirSHAArray,sha1($store));
@@ -69,6 +74,7 @@ foreach ($objectList as $objectRef) {
 			array_push($dirTypeArray,$type);
 	}
 }
+finfo_close($finfo);
 
 echo PHP_EOL.PHP_EOL.'<script>'.PHP_EOL;
 echo 'dirListArray = [';
@@ -112,6 +118,8 @@ echo '</script>';
 </form>
 </div>
 	
+<div id="infoPane" class="infoPane"></div>
+	
 <script>
 top.fcFormAlias = document.fcForm;
 var github = new Github(<?php
@@ -139,6 +147,10 @@ gitCommand = function(comm,value) {
 			}
 			compareList += "<b style='font-size: 18px'>CHANGED FILES:</b><br><br>";
 			newFilesList = "";
+			top.rowCount=0;
+			top.changedCount=0;
+			top.newCount=0;
+			top.deletedCount=0;
 			for (i=0;i<dirListArray.length;i++) {
 				repoArrayPos = repoListArray.indexOf(dirListArray[i]);
 				if (dirTypeArray[i]=="dir") {
@@ -159,6 +171,8 @@ gitCommand = function(comm,value) {
 					newFilesList += "</div>";
 					
 					newFilesList += "<span class='rowContent' id='row"+rowID+"Content'></span>";
+					top.rowCount++;
+					top.newCount++;
 					
 				} else if (dirTypeArray[i] == "file" && dirSHAArray[i] != repoSHAArray[repoArrayPos]) {
 					rowID++;
@@ -173,6 +187,8 @@ gitCommand = function(comm,value) {
 					compareList += "</div>";
 					
 					compareList += "<span class='rowContent' id='row"+rowID+"Content'></span>";
+					top.rowCount++;
+					top.changedCount++;
 				}
 			}
 
@@ -199,12 +215,15 @@ gitCommand = function(comm,value) {
 					delFilesList += "</div>";
 					
 					delFilesList += "<span class='rowContent' id='row"+rowID+"Content'></span>";
+					top.rowCount++;
+					top.deletedCount++;
 				}
 			}
 			
 			compareList += "<br><br><b style='font-size: 18px'>DELETED FILES:</b><br><br>"+delFilesList;
-			document.getElementById('compareList').innerHTML = compareList;
-			top.document.getElementById('blackMask').style.display='none';
+			get('compareList').innerHTML = compareList;
+			updateInfo();
+			get('blackMask','top').style.display='none';
 			}
 		)
 	}
@@ -212,10 +231,10 @@ gitCommand = function(comm,value) {
 	
 getContent = function(thisRow,path) {
 	if("undefined" == typeof overOption || !overOption) {
-		if ("undefined" == typeof lastRow || lastRow!=thisRow || document.getElementById('row'+thisRow+'Content').innerHTML=="") {
+		if ("undefined" == typeof lastRow || lastRow!=thisRow || get('row'+thisRow+'Content').innerHTML=="") {
 			for (i=1;i<=rowID;i++) {
-				document.getElementById('row'+i+'Content').innerHTML = "";
-				document.getElementById('row'+i+'Content').style.display = "none";
+				get('row'+i+'Content').innerHTML = "";
+				get('row'+i+'Content').style.display = "none";
 			}
 			repo = "<?php echo $repo;?>" + "/" + path;
 			dir = "<?php echo $path;?>" + "/" + path;
@@ -225,8 +244,8 @@ getContent = function(thisRow,path) {
 			document.fcForm.action.value = "view";
 			document.fcForm.submit();
 		} else {
-			document.getElementById('row'+thisRow+'Content').innerHTML = "";
-			document.getElementById('row'+thisRow+'Content').style.display = "none";
+			get('row'+thisRow+'Content').innerHTML = "";
+			get('row'+thisRow+'Content').style.display = "none";
 		}
 		lastRow = thisRow;
 	}
@@ -251,7 +270,7 @@ updateSelection = function(elem,row,repoDir,action) {
 commitChanges = function() {
 	if(top.selRowArray.length>0) {
 		if (document.fcForm.title.value!="Title..." && document.fcForm.message.value!="Message...") {
-			top.document.getElementById('blackMask').style.display = "block";
+			get('blackMask','top').style.display = "block";
 			top.selRowValue = "";
 			top.selDirValue = "";
 			top.selRepoValue = "";
