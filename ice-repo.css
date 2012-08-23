@@ -30,15 +30,16 @@ textarea, input {font-family: arial, verdana, helvetica, sans-serif; padding: 4p
 	-moz-box-shadow: 8px 8px 8px 8px rgba(0,0,0,0.4);
 	box-shadow: 4px 4px 8px 4px rgba(0,0,0,0.4);}
 
-.row {position: relative; display: inline-block; background: #ddd; width: 880px; padding: 10px 7px; margin-bottom: 2px; cursor: pointer; padding-left: 35px}
+.row {position: relative; display: inline-block; background: #ccc; color: #000; width: 880px; padding: 10px 7px; margin-bottom: 2px; cursor: pointer; padding-left: 35px}
 .row .icon {display: inline-block; width: 16px; height: 16px; margin-right: 7px; background-image:url(images/file-folder-icons.png); background-repeat: no-repeat}
 .row .checkbox {position: absolute; display: inline-block; height: 38px; width: 30px; top: -4px; left: 0px}
 .rowContent {position: relative; display: none; background: #eee; width: 100%; height: 300px; padding: 7px; margin-bottom: 10px; overflow: auto}
-.pullGithub {position: absolute; display: inline-block; top: 7px; left: 822px; padding: 5px; background: #aaa; color: #fff; font-size: 10px; cursor: pointer}
+.pullGithub {position: absolute; display: inline-block; top: 7px; left: 822px; padding: 5px; background: #bbb; color: #444; font-size: 10px; cursor: pointer}
 .version {position: absolute; display: inline-block; width: 100px; left: 1000px; top: 33px; font-size: 10px; color: #bbb; text-align: right}
 .logo {position: absolute; left: 1107px; top: 12px}
 
 .commitPane {position: fixed; background: #ccc; width: 270px; height: 300px; left: 960px; top: 0px; padding: 20px 10px 10px 10px; z-index: 100}
+.infoPane {position: fixed; width: 270px; height: 100px; left: 960px; top: 340px; padding: 20px 10px 10px 10px; z-index: 100}
 
 /* Folder */
 .ext-folder {background-position: -16px 0}
@@ -52,7 +53,7 @@ textarea, input {font-family: arial, verdana, helvetica, sans-serif; padding: 4p
 .ext-jpg {background-position: -96px 0}
 .ext-jpeg {background-position: -96px 0}
 .ext-js {background-position: -112px 0}
-.ext-less {background-position: -1428px 0}
+.ext-less {background-position: -128px 0}
 .ext-php {background-position: -144px 0}
 .ext-png {background-position: -160px 0}
 .ext-rb {background-position: -176px 0}
@@ -66,9 +67,6 @@ table.diff {color: #888; border: 0; white-space: pre-wrap}
 table.diff tbody th {color:#888; font-size: 11px; font-weight: normal; padding: 2px; vertical-align:top}
 table.diff thead th.texttitle {background: #444; color: #fff; text-align:left; padding: 2px}
 table.diff tbody td {width: 100%; font-family: Courier, monospace; vertical-align: top}
-table.diff .empty {background: #ddd}
-table.diff .replace {background: #888; color: #fff}
 table.diff .delete {background: #0b0; color: #fff}
-table.diff .skip {background: #f80; color: #fff}
 table.diff .insert {background: #b00; color: #fff}
 table.diff th.author {display: none}
