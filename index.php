@@ -6,14 +6,12 @@ if ($_SESSION['userLevel'] == 0) {
 }
 
 $docRoot = $_SERVER['DOCUMENT_ROOT'];
-$version = "0.7.1";
+$version = "0.7.2";
 
 // AUTHENTICATION
 // Can either be done by oauth, or username & password.
-
 // oauth
 $token = "";
-
 // Basic
 $username = "username";
 $password = "password";
@@ -47,7 +45,7 @@ $repos = array(
 	</div>
 </div>
 
-<div style="position: absolute; width: 100%; height: 60px; background: #444; z-index: 1">
+<div class="header">
 	<select name="repos" id="repos" onChange="doRepo(this.value)" style="margin: 20px 0 0 20px">
 	<?php
 	for ($i=0;$i<count($repos);$i+=3) {
@@ -58,17 +56,10 @@ $repos = array(
 	?>
 	</select>
 	
-	<div class="pullGithub" style="margin-top: 12px; margin-left: -22px" onClick="pullContent('selected')">Pull selected from Github</div>
+	<div class="pullGithubSel" onClick="pullContent('selected')">Pull selected from Github</div>
 	<div class="version"><?php echo $version;?></div>
 	<img src="images/ice-repo.gif" alt="ICErepo" class="logo">
 </div>
-	
-<script>
-doRepo = function(repo) {
-	document.showRepo.repo.value = repo;
-	document.showRepo.submit();
-}
-</script>
 
 <form name="showRepo" action="contents.php" target="repo" method="POST">
 <input type="hidden" name="token" value="<?php echo $token;?>">
@@ -77,7 +68,7 @@ doRepo = function(repo) {
 <input type="hidden" name="repo" value="">
 </form>
 
-<iframe id="repo" style="position: absolute; width: 100%; height: 90%; left: 0px; margin-top: 60px" frameborder="0"></iframe>
+<iframe id="repo" class="repoFrame" frameborder="0"></iframe>
 	
 </body>
 
