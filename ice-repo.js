@@ -1,6 +1,7 @@
 top.selRowArray = [];
 top.selRepoDirArray = [];
 top.selActionArray = [];
+top.filetypesArray = ['coffee','css','gif','htm','html','jpg','jpeg','js','less','php','png','rb','rbx','rhtml','ruby','txt','zip'];
 
 doRepo = function(repo) {
 	document.showRepo.repo.value = repo;
@@ -270,6 +271,7 @@ gitCommand = function(comm,value) {
 					
 					n += "<div class='row' id='row"+rowID+"'"+cE+sE+">";
 					n += "<input type='checkbox' class='checkbox' id='checkbox"+rowID+"' onMouseOver='overOption=true' onMouseOut='overOption=false' onClick='updateSelection(this,"+rowID+",\""+top.path+"/"+dirListArray[i]+"\",\"new\")'>";
+					if (ext != 'folder' && top.filetypesArray.indexOf(ext)==-1) {ext = 'file'};
 					n += "<div class='icon ext-"+ext+"'></div>"+dirListArray[i];
 					n += "<div class='pullGithub' style='left: 815px' onMouseOver='overOption=true' onMouseOut='overOption=false' "+gE+">Delete from server</div><br>";
 					n += "</div>";
@@ -286,6 +288,7 @@ gitCommand = function(comm,value) {
 					
 					c += "<div class='row' id='row"+rowID+"'"+cE+sE+">";
 					c += "<input type='checkbox' class='checkbox' id='checkbox"+rowID+"' onMouseOver='overOption=true' onMouseOut='overOption=false' onClick='updateSelection(this,"+rowID+",\""+top.path+"/"+dirListArray[i]+"@"+top.repo+"/"+dirListArray[i]+"\",\"changed\")'>";
+					if (ext != 'folder' && top.filetypesArray.indexOf(ext)==-1) {ext = 'file'};
 					c += "<div class='icon ext-"+ext+"'></div>"+dirListArray[i];
 					c += "<div class='pullGithub' onMouseOver='overOption=true' onMouseOut='overOption=false' "+gE+">Pull from Github</div><br>";
 					c += "</div>";
@@ -309,6 +312,7 @@ gitCommand = function(comm,value) {
 					
 					d += "<div class='row' id='row"+rowID+"'"+cE+sE+">";
 					d += "<input type='checkbox' class='checkbox' id='checkbox"+rowID+"' onMouseOver='overOption=true' onMouseOut='overOption=false' onClick='updateSelection(this,"+rowID+",\""+top.repo+"/"+repoListArray[i]+"\",\"deleted\")'>";
+					if (ext != 'folder' && top.filetypesArray.indexOf(ext)==-1) {ext = 'file'};
 					d += "<div class='icon ext-"+ext+"'></div>"+repoListArray[i];
 					d += "<div class='pullGithub' onMouseOver='overOption=true' onMouseOut='overOption=false' "+gE+">Pull from Github</div><br>";
 					d += "</div>";
