@@ -82,7 +82,7 @@ dirTypeArray = [<?php echo "'".implode("','", $dirTypeArray)."'";?>];
 <script>
 top.fcFormAlias = document.fcForm;
 var github = new Github(<?php
-if ($_POST['token']!="") {
+if ($token!="") {
 	echo '{token: "'.$token.'", auth: "oauth"}';
 } else{
 	echo '{username: "'.$username.'", password: "'.$password.'", auth: "basic"}';

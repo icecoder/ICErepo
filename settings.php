@@ -50,6 +50,10 @@ $context = stream_context_create(array('http'=>
 	)
 ));
 
+if ($token=="" && $username=="username") {
+	die("You need to set either a token or username & password in settings.php");
+}
+
 // Start a session if we haven't already
 if(!isset($_SESSION)) {@session_start();}
 

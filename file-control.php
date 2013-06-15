@@ -31,7 +31,7 @@ $actionArray = explode(",",$action);
 	fullRepoPath='<?php echo $repo;?>';
 	gitRepo='<?php echo $gitRepo;?>';
 	var github = new Github(<?php
-	if ($_POST['token']!="") {
+	if ($token!="") {
 		echo '{token: "'.$token.'", auth: "oauth"}';
 	} else{
 		echo '{username: "'.$username.'", password: "'.$password.'", auth: "basic"}';
