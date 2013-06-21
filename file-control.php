@@ -54,7 +54,7 @@ $actionArray = explode(",",$action);
 	window.onLoad = sendData(baseTextName,newTextName);
 	</script>
 <?php } else if (substr($_POST['action'],0,5)=="PULL:") { ?>
-	<form name="fcForm" action="file-control.php" method="POST">
+	<form name="fcForm" action="file-control.php?username=<?php echo $username;?>&password=<?php echo $password;?>" method="POST">
 		<?php
 		echo '<input type="hidden" name="rowID" value="'.$rowID.'">';
 		echo '<input type="hidden" name="repo" value="'.$repo.'">';
