@@ -15,8 +15,8 @@ $version = "0.8.0";
 // oauth
 $token = "";
 // Basic
-$username = "username";
-$password = "password";
+$username = "";
+$password = "";
 
 // REPOS & SERVER DIRS
 // Here you identify the repo location and related path on your server
@@ -50,15 +50,33 @@ $context = stream_context_create(array('http'=>
 	)
 ));
 
-if ($token=="" && $username=="username") {
-	die("You need to set either a token or username & password in settings.php");
-}
-
 // Start a session if we haven't already
 if(!isset($_SESSION)) {@session_start();}
 
 if (!isset($_SESSION['userLevel']) || $_SESSION['userLevel'] < 1) {
 	die("Sorry, you need to be logged in to use ICErepo");
+}
+
+// Set session vars if we're logging in via a session
+if (isset($_REQUEST['token']) && $_REQUEST['token']!="") {
+	$_SESSION['token'] = $_REQUEST['token'];
+}
+if (isset($_REQUEST['username']) && $_REQUEST['username']!="") {
+	$_SESSION['username'] = $_REQUEST['username'];
+	$_SESSION['password'] = $_REQUEST['password'];
+}
+
+// Reestablish those session vars in an ongoing way
+if (isset($_SESSION['token'])) {
+	$_SESSION['token'] = $_SESSION['token'];
+}
+if (isset($_SESSION['username'])) {
+	$username = $_SESSION['username'] = $_SESSION['username'];
+	$password = $_SESSION['password'] = $_SESSION['password'];
+}
+
+if ($token=="" && $username=="" && !isset($_GET['sessionLogin'])) {
+	header("Location: ?sessionLogin=true");
 }
 
 // returns converted entities where there are HTML entity equivalents
