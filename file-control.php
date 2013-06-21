@@ -44,7 +44,7 @@ $actionArray = explode(",",$action);
 
 <?php if ($_POST['action']=="view") {?>
 	<form name="fcForm">
-	<textarea name="fileContents"><?php echo file_exists($dir) ? htmlentities(file_get_contents($dir)) : ''; ?></textarea>
+		<textarea name="fileContents"><?php echo file_exists($dir) ? htmlentities(file_get_contents($dir)) : ''; ?></textarea>
 	</form>
 	<script>
 	rowID = <?php echo $rowID; ?>;
@@ -55,18 +55,18 @@ $actionArray = explode(",",$action);
 	</script>
 <?php } else if (substr($_POST['action'],0,5)=="PULL:") { ?>
 	<form name="fcForm" action="file-control.php" method="POST">
-	<?php
-	echo '<input type="hidden" name="rowID" value="'.$rowID.'">';
-	echo '<input type="hidden" name="repo" value="'.$repo.'">';
-	echo '<input type="hidden" name="dir" value="'.$dir.'">';
-	echo '<input type="hidden" name="action" value="SAVEPULLS:'.$action.'">';
-	echo '<input type="hidden" name="path" value="'.$path.'">';
-	for ($i=0;$i<count($rowIDArray);$i++) {
-		if ($repoArray[$i]!="") {
-			echo '<textarea name="repoContents'.$rowIDArray[$i].'"></textarea>';
+		<?php
+		echo '<input type="hidden" name="rowID" value="'.$rowID.'">';
+		echo '<input type="hidden" name="repo" value="'.$repo.'">';
+		echo '<input type="hidden" name="dir" value="'.$dir.'">';
+		echo '<input type="hidden" name="action" value="SAVEPULLS:'.$action.'">';
+		echo '<input type="hidden" name="path" value="'.$path.'">';
+		for ($i=0;$i<count($rowIDArray);$i++) {
+			if ($repoArray[$i]!="") {
+				echo '<textarea name="repoContents'.$rowIDArray[$i].'"></textarea>';
+			}
 		}
-	}
-	?>
+		?>
 	</form>
 	<script>
 	rowIDArray = [<?php echo implode(",", $rowIDArray);?>];
@@ -108,13 +108,13 @@ $actionArray = explode(",",$action);
 <?php } else { ?>
 	<form name="fcForm">
 	<?php
-	for ($i=0;$i<count($rowIDArray);$i++) {
-		if ($dirArray[$i]!="") {
-			echo '<textarea name="fileContents'.$rowIDArray[$i].'">';
-			echo htmlentities(file_get_contents($dirArray[$i]));
-			echo '</textarea>';
+		for ($i=0;$i<count($rowIDArray);$i++) {
+			if ($dirArray[$i]!="") {
+				echo '<textarea name="fileContents'.$rowIDArray[$i].'">';
+				echo htmlentities(file_get_contents($dirArray[$i]));
+				echo '</textarea>';
+			}
 		}
-	}
 	?>
 	</form>
 	<script>

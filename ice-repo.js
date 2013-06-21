@@ -229,7 +229,7 @@ ffDelete = function(row,gitRepo,action) {
 startProcess = function() {
 	if(actionArray[0]=="changed"||actionArray[0]=="new") {
 		if(actionArray[0]=="changed")	{repoLoc = repoArray[0].replace(repoUser+"/"+repoName+"/","")}
-		if(actionArray[0]=="new")		{repoLoc = dirArray[0].replace(top.path+"/",'')}
+		if(actionArray[0]=="new")	{repoLoc = dirArray[0].replace(top.path+"/",'')}
 		ffAddOrUpdate(rowIDArray[0],repoLoc,actionArray[0]);
 	}
 	if(actionArray[0]=="deleted") {
