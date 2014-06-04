@@ -61,7 +61,7 @@ if (isset($_GET['sessionLogin'])) {
 		<input type="hidden" name="repo" value="">
 	</form>
 
-	<iframe id="repo" class="repoFrame" frameborder="0"></iframe>
+	<iframe name="repo" id="repo" class="repoFrame" frameborder="0"></iframe>
 <?php
 ;};
 ?>
