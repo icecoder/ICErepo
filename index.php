@@ -1,4 +1,4 @@
-<?php include("settings.php"); ?>
+<?php include("settings.php");?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,17 +14,23 @@
 if (isset($_GET['sessionLogin'])) {
 ?>
 
-<form name="sessionLogin" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="POST">
-	<b>Token:</b><br>
-	<input type="text" name="token">
-	<br><br>
-	or:<br><br>
-	<b>Username:</b><br>
-	<input type="text" name="username"><br>
-	<b>Password:</b><br>
-	<input type="password" name="password"><br>
-	<input type="submit">
-</form>
+<body style="margin: 10px">
+
+	Enter GitHub token or username & password to use in this session:<br><br>
+
+	<form name="sessionLogin" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="POST">
+		<b>Token:</b><br>
+		<input type="text" name="token">
+		<br><br>
+		or:<br><br>
+		<b>Username:</b><br>
+		<input type="text" name="username"><br>
+		<b>Password:</b><br>
+		<input type="password" name="password"><br><br>
+		<input type="submit">
+	</form>
+
+</body>
 
 <?php
 } else {
@@ -42,7 +48,7 @@ if (isset($_GET['sessionLogin'])) {
 	</div>
 
 	<div class="header">
-		<select name="repos" id="repos" onChange="doRepo(this.value)" style="margin: 20px 0 0 20px">
+		<select class="reposList" name="repos" id="repos" onChange="doRepo(this.value)" style="margin: 20px 0 0 20px">
 		<?php
 		for ($i=0;$i<count($repos);$i+=3) {
 			echo '<option id="repo'.($i/3).'" value="'.$repos[$i].'@'.$repos[$i+1].'"';
@@ -53,11 +59,11 @@ if (isset($_GET['sessionLogin'])) {
 		</select>
 	
 		<div class="pullGithubSel" onClick="pullContent('selected')">Pull selected from Github</div>
-		<div class="version"><?php echo $version;?></div>
+		<div class="version">v <?php echo $version;?></div>
 		<img src="images/ice-repo.gif" alt="ICErepo" class="logo">
 	</div>
 
-	<form name="showRepo" action="contents.php?username=<?php echo $username;?>&password=<?php echo $password;?>" target="repo" method="POST">
+	<form name="showRepo" action="contents.php?username=<?php echo $username;?>&password=<?php echo $password;?>&token=<?php echo $token;?>" target="repo" method="POST">
 		<input type="hidden" name="repo" value="">
 	</form>
 
