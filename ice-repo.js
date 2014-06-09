@@ -205,7 +205,11 @@ ffAddOrUpdate = function(row,gitRepo,action) {
 		if(!err) {
 			removeFirstArrayItems();
 			hideRow(row);
-			top.newCount--;
+			if (action == "changed") {
+				top.changedCount--;
+			} else {
+				top.newCount--;
+			}
 			rowIDArray.length>0 ? startProcess() : get('loadingMask','top').style.display = "none";
 		} else {
 			alert('Sorry, there was an error adding '+gitRepo);
