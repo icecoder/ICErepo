@@ -46,8 +46,10 @@ foreach ($objectList as $objectRef) {
 			$i++;
 			array_push($dirListArray,ltrim($fileFolderName,"/"));
 			array_push($dirSHAArray,sha1($store));
-			$type = is_dir($path.$fileFolderName) ? "dir" : "file";
+			$type = "file";
 			array_push($dirTypeArray,$type);
+	} else {
+		// Do nothing, it's a dir
 	}
 }
 ?>
@@ -64,7 +66,7 @@ dirTypeArray = [<?php echo "'".implode("','", $dirTypeArray)."'";?>];
 	
 <div id="commitPane" class="commitPane">
 	<b style='font-size: 18px'>COMMIT CHANGES:</b><br><br>
-	<form name="fcForm" action="file-control.php?username=<?php echo $username;?>&password=<?php echo $password;?>" target="fileControl" method="POST">
+	<form name="fcForm" action="file-control.php?username=<?php echo $username;?>&password=<?php echo $password;?>&token=<?php echo $token;?>" target="fileControl" method="POST">
 		<input type="text" name="title" value="Title..." style="width: 260px; border: 0; background: #f8f8f8; margin-bottom: 10px" onFocus="titleDefault='Title...'; if(this.value==titleDefault) {this.value=''}" onBlur="if(this.value=='') {this.value=titleDefault}"><br>
 		<textarea name="message" style="width: 260px; height: 180px; border: 0; background: #f8f8f8; margin-bottom: 5px" onFocus="messageDefault='Message...'; if(this.value==messageDefault) {this.value=''}" onBlur="if(this.value=='') {this.value=messageDefault}">Message...</textarea>
 		<input type="hidden" name="path" value="<?php echo $path; ?>">	
