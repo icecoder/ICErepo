@@ -82,7 +82,7 @@ commitChanges = function() {
 			alert('Please enter a title & message for the commit');		
 		}
 	} else {
-		alert('Please select some files/folders to commit');
+		alert('Please select some files to commit');
 	}
 	return false;
 }
@@ -254,68 +254,73 @@ gitCommand = function(comm,value) {
 		rowID = 0;
  		repo.getTree('master?recursive=true', function(err, tree) {
 			for (i=0;i<tree.length;i++) {
-				repoListArray.push(tree[i].path);
-				repoSHAArray.push(tree[i].sha);
+				// If not a folder (tree), it's a 'blob' type, aka file
+				if (tree[i].type != "tree") {
+					repoListArray.push(tree[i].path);
+					repoSHAArray.push(tree[i].sha);
+				}
 			}
-			var c = "", n = "", d = "";
+			var c = "- no changed files -", n = "- No new files -", d = "- no deleted files -";
 			top.rowCount=0, top.changedCount=0, top.newCount=0, top.deletedCount=0;
 			for (i=0;i<dirListArray.length;i++) {
 				repoArrayPos = repoListArray.indexOf(dirListArray[i]);
-				ext = dirTypeArray[i]=="dir"
-					? "folder"
-					: dirListArray[i].substr(dirListArray[i].lastIndexOf('.')+1);
+				ext = dirListArray[i].substr(dirListArray[i].lastIndexOf('.')+1);
+				// =========
+				// New files
+				// =========
 				if (repoArrayPos == "-1") {
 					rowID++;
-					sE = ext == 'folder' ? ' style="cursor: default"' : '';
-					cE = ext != 'folder' ? ' onClick="getContent('+rowID+',\''+dirListArray[i]+'\')"' : '';
+					if (n == "- No new files -") {n = ""};
 					gE = 'onClick="pullContent('+rowID+',\''+top.path+'/'+dirListArray[i]+'\',\''+dirListArray[i]+'\',\'new\')"';
-					
-					n += "<div class='row' id='row"+rowID+"'"+cE+sE+">";
+
+					n += "<div class='row' id='row"+rowID+"' onClick=\"getContent('"+rowID+"','"+dirListArray[i]+"')\">";
 					n += "<input type='checkbox' class='checkbox' id='checkbox"+rowID+"' onMouseOver='overOption=true' onMouseOut='overOption=false' onClick='updateSelection(this,"+rowID+",\""+top.path+"/"+dirListArray[i]+"\",\"new\")'>";
-					if (ext != 'folder' && top.filetypesArray.indexOf(ext)==-1) {ext = 'file'};
+					if (top.filetypesArray.indexOf(ext)==-1) {ext = 'file'};
 					n += "<div class='icon ext-"+ext+"'></div>"+dirListArray[i];
 					n += "<div class='pullGithub' style='left: 815px' onMouseOver='overOption=true' onMouseOut='overOption=false' "+gE+">Delete from server</div><br>";
 					n += "</div>";
-					
+
 					n += "<span class='rowContent' id='row"+rowID+"Content'></span>";
 					top.rowCount++;
 					top.newCount++;
-					
+
+				// =============
+				// Changed files
+				// =============
 				} else if (dirTypeArray[i] == "file" && dirSHAArray[i] != repoSHAArray[repoArrayPos]) {
 					rowID++;
-					sE = ext == 'folder' ? ' style="cursor: default"' : '';
-					cE = ext != 'folder' ? ' onClick="getContent('+rowID+',\''+dirListArray[i]+'\')"' : '';
+					if (c == "- no changed files -") {c = ""};
 					gE = 'onClick="pullContent('+rowID+',\''+top.path+'/'+dirListArray[i]+'\',\''+dirListArray[i]+'\',\'changed\')"';
-					
-					c += "<div class='row' id='row"+rowID+"'"+cE+sE+">";
+
+					c += "<div class='row' id='row"+rowID+"' onClick=\"getContent('"+rowID+"','"+dirListArray[i]+"')\">";
 					c += "<input type='checkbox' class='checkbox' id='checkbox"+rowID+"' onMouseOver='overOption=true' onMouseOut='overOption=false' onClick='updateSelection(this,"+rowID+",\""+top.path+"/"+dirListArray[i]+"@"+top.repo+"/"+dirListArray[i]+"\",\"changed\")'>";
-					if (ext != 'folder' && top.filetypesArray.indexOf(ext)==-1) {ext = 'file'};
+					if (top.filetypesArray.indexOf(ext)==-1) {ext = 'file'};
 					c += "<div class='icon ext-"+ext+"'></div>"+dirListArray[i];
-					c += "<div class='pullGithub' onMouseOver='overOption=true' onMouseOut='overOption=false' "+gE+">Pull from Github</div><br>";
+					c += "<div class='pullGithub' onMouseOver='overOption=true' onMouseOut='overOption=false' "+gE+">Pull from GitHub</div><br>";
 					c += "</div>";
-					
+
 					c += "<span class='rowContent' id='row"+rowID+"Content'></span>";
 					top.rowCount++;
 					top.changedCount++;
 				}
 			}
-			
+
+			// =============
+			// Deleted files
+			// =============
 			for (i=0;i<repoListArray.length;i++) {
 				dirArrayPos = dirListArray.indexOf(repoListArray[i]);
-				ext = repoListArray[i].lastIndexOf('/') > repoListArray[i].lastIndexOf('.')
-					? "folder"
-					: repoListArray[i].substr(repoListArray[i].lastIndexOf('.')+1);
-				if (dirArrayPos == "-1") {
+				ext = repoListArray[i].substr(repoListArray[i].lastIndexOf('.')+1);
+				if (dirArrayPos === -1) {
 					rowID++;
-					sE = ext == 'folder' ? ' style="cursor: default"' : '';
-					cE = ext != 'folder' ? ' onClick="getContent('+rowID+',\''+repoListArray[i]+'\')"' : '';
+					if (d == "- no deleted files -") {d = ""};
 					gE = 'onClick="pullContent('+rowID+',\''+top.path+'/'+repoListArray[i]+'\',\''+repoListArray[i]+'\',\'deleted\')"';
 					
-					d += "<div class='row' id='row"+rowID+"'"+cE+sE+">";
+					d += "<div class='row' id='row"+rowID+"' onClick=\"getContent('"+rowID+"','"+repoListArray[i]+"')\">";
 					d += "<input type='checkbox' class='checkbox' id='checkbox"+rowID+"' onMouseOver='overOption=true' onMouseOut='overOption=false' onClick='updateSelection(this,"+rowID+",\""+top.repo+"/"+repoListArray[i]+"\",\"deleted\")'>";
-					if (ext != 'folder' && top.filetypesArray.indexOf(ext)==-1) {ext = 'file'};
+					if (top.filetypesArray.indexOf(ext)==-1) {ext = 'file'};
 					d += "<div class='icon ext-"+ext+"'></div>"+repoListArray[i];
-					d += "<div class='pullGithub' onMouseOver='overOption=true' onMouseOut='overOption=false' "+gE+">Pull from Github</div><br>";
+					d += "<div class='pullGithub' onMouseOver='overOption=true' onMouseOut='overOption=false' "+gE+">Pull from GitHub</div><br>";
 					d += "</div>";
 					
 					d += "<span class='rowContent' id='row"+rowID+"Content'></span>";
