@@ -7,10 +7,11 @@
 // Document root and ICErepo version no:
 
 $docRoot = $_SERVER['DOCUMENT_ROOT'];
-$version = "0.8.0";
+$version = "0.9.0";
 
 // AUTHENTICATION
-// Can either be done by oauth (recommended), or username & password (less secure)
+// Can either be done by token (good idea), or username & password (much less secure!)
+// If you don't set them here, they are asked for in the session (recommended)
 
 // oauth
 $token = "";
@@ -23,8 +24,8 @@ $password = "";
 // (the last param is to identify which dropdown option to select by default).
 
 $repos = array(
-		"mattpass/dirTree",$docRoot."/TEST2","",
-		"mattpass/TEST",$docRoot."/TEST","selected"
+		"mattpass/ICErepo",$docRoot."/repo","selected",
+		"mattpass/ICEcoder",$docRoot."/_coder",""
 		);
 
 // User level setting. Set at 1 or above to use
@@ -74,7 +75,6 @@ if (isset($_SESSION['username'])) {
 	$username = $_SESSION['username'] = $_SESSION['username'];
 	$password = $_SESSION['password'] = $_SESSION['password'];
 }
-
 if ($token=="" && $username=="" && !isset($_GET['sessionLogin'])) {
 	header("Location: ?sessionLogin=true");
 }
@@ -103,7 +103,7 @@ class SortingIterator implements IteratorAggregate {
 		$this->iterator = new ArrayIterator($array);
 	}
 	public function getIterator() {
-	return $this->iterator;
+		return $this->iterator;
 	}
 }
 
