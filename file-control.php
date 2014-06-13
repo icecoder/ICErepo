@@ -91,17 +91,22 @@ $actionArray = explode(",",$action);
 				$fh = fopen($path."/".$repoArray[$i], 'w') or die("alert('Sorry, there was a problem pulling ".$repoArray[$i].". Either the file is unavailable on Github or server permissions aren\'t allowing it to be created/updated.');get('loadingMask','top').style.display='none';");
 				fwrite($fh, $_POST['repoContents'.$rowIDArray[$i]]);
 				fclose($fh);
-				echo "hideRow(".$rowIDArray[$i].");top.newCount--;";
+				echo "hideRow(".$rowIDArray[$i].");top.deletedCount--;updateInfo('parent');";
 			} else {
 				is_dir($dir) ? $success = rmdir($dir) : $success = unlink($dir);
 				if (!$success) {
 					echo "alert('Sorry, couldn\'t delete ".$dir."\\n\\n";
 					echo "Maybe you need to give file permissions for it to be deleted?');";
 				} else {
-					echo "hideRow(".$rowIDArray[$i].");top.deletedCount--;";
+					echo "hideRow(".$rowIDArray[$i].");top.newCount--;updateInfo('parent');";
 				}
 			}
 		}
+		echo "
+			if (top.changedCount == 0) {get('noC','parent').style.display = 'block';};
+			if (top.newCount == 0) {get('noN','parent').style.display = 'block';};
+			if (top.deletedCount == 0) {get('noD','parent').style.display = 'block';};
+		";
 		echo "get('loadingMask','top').style.display = 'none';";
 	?>
 	</script>
