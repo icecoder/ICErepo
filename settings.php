@@ -7,7 +7,7 @@
 // Document root and ICErepo version no:
 
 $docRoot = $_SERVER['DOCUMENT_ROOT'];
-$version = "0.9.0";
+$version = "1.0 beta";
 
 // AUTHENTICATION
 // Can either be done by token (good idea), or username & password (much less secure!)
