@@ -20,12 +20,67 @@ $repo = $repoPath[0];
 $path = $repoPath[1];
 $objectList = new SortingIterator(new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path), RecursiveIteratorIterator::SELF_FIRST), 'alphasort');
 
+// Iterator to get files
+$iter = new RecursiveIteratorIterator(
+	new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::SKIP_DOTS),
+	RecursiveIteratorIterator::SELF_FIRST,
+	RecursiveIteratorIterator::CATCH_GET_CHILD // Ignore "Permission denied"
+);
+
+// Check if dir has .gitignore file
+function hasGitignore($dir) {
+	return is_file("$dir/.gitignore");
+}
+
+// Get a list of .gitignore files into $gi array
+$gi = array();
+if(hasGitignore($path)) {
+	$gi[] = "$path/.gitignore";
+}
+foreach ($iter as $scanpath) {
+    if (is_dir($scanpath) && strpos($scanpath,".git") == false) {
+		$thisDir = str_replace("\\","/",$scanpath);
+        if(hasGitignore($thisDir)) {
+			$gi[] = $thisDir."/.gitignore";
+		}
+    }
+}
+
+// Get $matches array containing existing files listed in .gitignore
+function parseGitignore($file) { # $file = '/absolute/path/to/.gitignore'
+  $dir = dirname($file);
+  $matches = array();
+  $lines = file($file);
+  foreach ($lines as $line) {
+    $line = trim($line);
+    if ($line === '') continue;                 # empty line
+    if (substr($line, 0, 1) == '#') continue;   # a comment
+    if (substr($line, 0, 1) == '!') {           # negated glob
+      $line = substr($line, 1);
+      $files = array_diff(glob("$dir/*"), glob("$dir/$line"));
+    } else {                                    # normal glob
+      $files = glob("$dir/$line");
+    }
+    $matches = array_merge($matches, $files);
+  }
+  return $matches;
+}
+
+// Cycle through all .gitignore files running above function to get a list of $excluded files
+$excluded = array();
+foreach ($gi as $scanpath) {
+    $excludedTest = (parseGitignore($scanpath));
+	if (count($excludedTest) > 0) {
+		$excluded = array_merge($excluded, $excludedTest);
+	}
+}
+
 // Finally, we have our ordered list, so display
 $i=0;
 $dirListArray = $dirSHAArray = $dirTypeArray = array();
 foreach ($objectList as $objectRef) {
 	$fileFolderName = @rtrim(substr(str_replace("\\","/",$objectRef->getPathname()), strlen($path)),"..");
-	if (!is_dir($path.$fileFolderName)) {
+	if (strpos($fileFolderName,".git/") == false && !in_array($path.$fileFolderName, $excluded) && !is_dir($path.$fileFolderName)) {
 			$contents = file_get_contents($path.$fileFolderName);
 			$finfo = "";
 			// Determine what to do based on mime type
@@ -80,7 +135,7 @@ dirTypeArray = [<?php echo "'".implode("','", $dirTypeArray)."'";?>];
 </div>
 	
 <div id="infoPane" class="infoPane"></div>
-	
+
 <script>
 top.fcFormAlias = document.fcForm;
 var github = new Github(<?php
