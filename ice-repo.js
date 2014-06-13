@@ -264,7 +264,7 @@ gitCommand = function(comm,value) {
 					repoSHAArray.push(tree[i].sha);
 				}
 			}
-			var c = "- no changed files -", n = "- No new files -", d = "- no deleted files -";
+			var c = "- no changed files -", n = "- no new files -", d = "- no deleted files -";
 			top.rowCount=0, top.changedCount=0, top.newCount=0, top.deletedCount=0;
 			for (i=0;i<dirListArray.length;i++) {
 				repoArrayPos = repoListArray.indexOf(dirListArray[i]);
@@ -274,7 +274,7 @@ gitCommand = function(comm,value) {
 				// =========
 				if (repoArrayPos == "-1") {
 					rowID++;
-					if (n == "- No new files -") {n = ""};
+					if (n == "- no new files -") {n = ""};
 					gE = 'onClick="pullContent('+rowID+',\''+top.path+'/'+dirListArray[i]+'\',\''+dirListArray[i]+'\',\'new\')"';
 
 					n += "<div class='row' id='row"+rowID+"' onClick=\"getContent('"+rowID+"','"+dirListArray[i]+"')\">";
@@ -333,9 +333,13 @@ gitCommand = function(comm,value) {
 				}
 			}
 			
-			c = "<b style='font-size: 18px'>CHANGED FILES:</b><br><br>"+c;
-			n = "<b style='font-size: 18px'>NEW FILES:</b><br><br>"+n;
-			d = "<b style='font-size: 18px'>DELETED FILES:</b><br><br>"+d
+			var noC = '<div id="noC" style="display: none">- no changed files -</div>';
+			var noN = '<div id="noN" style="display: none">- no new files -</div>';
+			var noD = '<div id="noD" style="display: none">- no deleted files -</div>';
+
+			c = "<b style='font-size: 18px'>CHANGED FILES:</b><br><br>"+c+noC;
+			n = "<b style='font-size: 18px'>NEW FILES:</b><br><br>"+n+noN;
+			d = "<b style='font-size: 18px'>DELETED FILES:</b><br><br>"+d+noD;
 			
 			get('compareList').innerHTML = c+"<br><br>"+n+"<br><br>"+d;
 			updateInfo();
