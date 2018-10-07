@@ -9,11 +9,11 @@ Originally intended to be a plugin for ICEcoder (https://github.com/mattpass/ICE
 
 The aim is a simple UI to view diffs between your server dir's and related Github repo's. This list will consist of new files (those only on server), deleted files (those only on Github) and changed files (files that exist in both places but are different). Files that exist in both locations and the same are not shown to keep things minimalist.
 
-Users can then to pick & choose the files they'd like to commit, provide a title and message, then commit to Github. As each file is synced by the user to match the server it dissapears from the UI list. Alternatively you can pull files & folders from Github to sync your server dir's with the repo itself.
+Users can then to pick & choose the files they'd like to commit, provide a title and message, then commit to Github. As each file is synced by the user to match the server it disappears from the UI list. Alternatively you can pull files & folders from Github to sync your server dir's with the repo itself.
 
 Cool huh?
 
-**Current screnshot:**
+**Current screenshot:**
 
 <img src="http://www.mattpass.com/images/icerepo.png" alt="ICErepo screenshot">
 
