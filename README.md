@@ -1,6 +1,9 @@
 ICErepo
 =======
 
+Contents:
+[About](#icerepo) - [Installation](#installation)
+
 Show diffs, push, pull &amp; sync your site and Github repo's.
 
 While Github has a fantastic website, mobile app, desktop app and of course bash system, there's no web based UI I can find to sync your website code with Github repo's or vice versa. That's what ICErepo provides.
@@ -23,22 +26,22 @@ Github API lib: https://github.com/michael/github
 
 JS Diff lib:    https://github.com/cemerick/jsdifflib
 
-###Installation
+### Installation
 
-####Step 1: Clone the repo
+#### Step 1: Clone the repo
 
 ```
 $ git clone git://github.com/mattpass/ICErepo
 ```
 
-####Step 2: Enter your auth settings
+#### Step 2: Enter your auth settings
 ```
 Open settings.php and enter either your Github oauth token or username & password
 oauth is the better choice of the two here, view http://developer.github.com/v3/oauth/ for info
 (If using oauth ensure you have repo scope & your app is granted the URL you'll run under). You can also omit entering any details here and it will ask for either of these details to use in the session. A token set in the session is the recommended approach here.
 ```
 
-####Step 3: Enter your repo & server dir settings
+#### Step 3: Enter your repo & server dir settings
 ```
 Also in settings.php, enter the repo & corresponding server paths
 Enter 'selected' as a 3rd param next to your default repo/server option to autoload that
